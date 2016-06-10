@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="s_more">更多</string>
+    <string name="s_explore">发现</string>
+
+    <string name="t_exlpore">头条</string>
+    <string name="t_text">文字</string>
+    <string name="t_pic">图片</string>
+    <string name="t_video">视频</string>
+    <string name="t_more">更多</string>
+
+</resources>

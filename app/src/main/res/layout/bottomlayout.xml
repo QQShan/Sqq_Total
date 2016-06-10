@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@drawable/rect"
+    android:elevation="5dp"
+    android:layout_height="@dimen/main_bottom_height">
+
+    <TextView
+        style="@style/bottom_text"
+        android:id="@+id/left"
+        android:drawableTop="@drawable/main_index_my_normal"
+        tools:text="dssfdf"
+        android:text="@string/s_explore"/>
+
+    <TextView
+        style="@style/bottom_text"
+        android:id="@+id/right"
+        android:drawableTop="@drawable/main_index_more_normal"
+        tools:text="dssfdf"
+        android:text="@string/s_more"/>
+</LinearLayout>

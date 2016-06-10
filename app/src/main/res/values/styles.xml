@@ -1,0 +1,65 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="SqqTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="android:activityOpenEnterAnimation">@android:anim/slide_in_left</item>
+        <item name="android:activityOpenExitAnimation">@android:anim/slide_out_right</item>
+        <item name="android:activityCloseEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:activityCloseExitAnimation">@android:anim/fade_out</item>-->
+       <!-- <item name="android:activityOpenEnterAnimation">@animator/in_anim</item>
+        <item name="android:activityOpenExitAnimation">@animator/in_anim</item>
+        <item name="android:activityCloseEnterAnimation">@animator/out_anim</item>
+        <item name="android:activityCloseExitAnimation">@animator/out_anim</item>-->
+
+    </style>
+
+    <style name="Sqqactivity" parent="Theme.AppCompat.Light">
+        <item name="android:activityOpenEnterAnimation">@animator/in_anim</item>
+        <item name="android:activityOpenExitAnimation">@animator/in_anim</item>
+        <item name="android:activityCloseEnterAnimation">@animator/out_anim</item>
+        <item name="android:activityCloseExitAnimation">@animator/out_anim</item>
+    </style>
+
+    <style name="bottom_text">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!--<item name="android:textColor">@color/colorYellow</item>-->
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="title_text">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="recyclerview">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:clipChildren">false</item>
+        <item name="android:paddingTop">@dimen/title_height</item>
+    </style>
+
+    <style name="cardviewstyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+</resources>

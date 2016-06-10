@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="@dimen/title_height"
+    android:background="@color/transparent">
+
+    <TextView
+        style="@style/title_text"
+        android:id="@+id/headline"
+        android:text="@string/t_exlpore"
+        tools:text="头条"/>
+
+    <TextView
+        style="@style/title_text"
+        android:id="@+id/text"
+        android:text="@string/t_text"
+        tools:text="文字"/>
+
+    <TextView
+        style="@style/title_text"
+        android:id="@+id/pic"
+        android:text="@string/t_pic"
+        tools:text="图片"/>
+
+    <TextView
+        style="@style/title_text"
+        android:id="@+id/video"
+        android:text="@string/t_video"
+        tools:text="视频"/>
+</LinearLayout>
