@@ -190,6 +190,7 @@ public class HeadlineFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mCurSlideView = sv.getCurrentItem();
+        if(sv!=null)
+            mCurSlideView = sv.getCurrentItem();
     }
 }
