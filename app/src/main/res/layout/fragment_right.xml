@@ -23,10 +23,10 @@
         android:id="@+id/files"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="right"
         android:textSize="30sp"
         android:clipToPadding="false"
         android:clipChildren="false"
-        android:paddingTop="@dimen/title_height"/>
+        android:paddingTop="@dimen/title_height"
+        tools:text="更多"/>
 
 </FrameLayout>

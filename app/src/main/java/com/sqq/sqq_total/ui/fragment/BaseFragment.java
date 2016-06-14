@@ -16,6 +16,9 @@ import com.sqq.sqq_total.ui.activity.HeadlineActivity;
 
 import java.lang.ref.WeakReference;
 
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
 /**
  * Created by sqq on 2016/5/28.
  */
@@ -23,6 +26,25 @@ public abstract class BaseFragment extends Fragment {
 
     protected ViewGroup rootView;
     protected WeakReference activityRef;
+
+    private CompositeSubscription mCompositeSubscription;
+
+    public CompositeSubscription getCompositeSubscription() {
+        if (this.mCompositeSubscription == null) {
+            this.mCompositeSubscription = new CompositeSubscription();
+        }
+
+        return this.mCompositeSubscription;
+    }
+
+
+    public void addSubscription(Subscription s) {
+        if (this.mCompositeSubscription == null) {
+            this.mCompositeSubscription = new CompositeSubscription();
+        }
+
+        this.mCompositeSubscription.add(s);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -94,13 +116,14 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("fragment", "onDestroy");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d("fragment", "onDetach");
+        if (this.mCompositeSubscription != null) {
+            this.mCompositeSubscription.unsubscribe();
+        }
     }
 
     protected Activity getSelfActivity(){

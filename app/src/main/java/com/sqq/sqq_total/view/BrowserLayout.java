@@ -62,7 +62,7 @@ public class BrowserLayout extends FrameLayout {
         //addView(vg, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
         //mProgressBar = (ProgressBar) LayoutInflater.from(context).inflate(R.layout.progress_horizontal, null);
-        mProgressBar = (ProgressBar) vg.findViewById(R.id.my_profile_tracker);
+        mProgressBar = (ProgressBar) vg.findViewById(R.id.my_profile_progress);
         mProgressBar.setProgress(0);
         //addView(mProgressBar, LayoutParams.MATCH_PARENT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, mProgressHeight, getResources().getDisplayMetrics()));
 
