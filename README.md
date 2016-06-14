@@ -1,3 +1,8 @@
 # Sqq_Total
 My first app . retrofit+rxjava+mvp
 还在完善中，目前上传的部分只是一小部分
+界面：
+![image](https://github.com/shanquanqiang/Sqq_Total/blob/master/screenshots/Screenshot_2016-06-14-10-30-44.png)
+![image](https://github.com/shanquanqiang/Sqq_Total/blob/master/screenshots/Screenshot_2016-06-14-10-30-53.png)
+![image](https://github.com/shanquanqiang/Sqq_Total/blob/master/screenshots/Screenshot_2016-06-14-10-31-02.png)
+![image](https://github.com/shanquanqiang/Sqq_Total/blob/master/screenshots/Screenshot_2016-06-14-10-31-08.png)
