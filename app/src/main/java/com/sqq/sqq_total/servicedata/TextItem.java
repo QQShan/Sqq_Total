@@ -1,13 +1,9 @@
 package com.sqq.sqq_total.servicedata;
 
-
-import java.sql.Timestamp;
-
 /**
- * Created by sqq on 2016/6/8.
- * recyclerview里一般的item
+ * Created by sqq on 2016/6/15.
  */
-public class HeadlineItem {
+public class TextItem {
     String title;           //标题文字
     String description;     //简短的描述文字
     long time;            //数据发布的时间

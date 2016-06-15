@@ -109,7 +109,7 @@ public class SqqRetrofit {
                         .cacheControl(CacheControl.FORCE_CACHE)
                         .build();
             }
-
+            //Log.d("sqqq","请求"+request.headers().toString());
             Response response = chain.proceed(request);
             if (NetWorkUtil.getInstance().isConnected()) {
                 //如果有网络
@@ -118,6 +118,7 @@ public class SqqRetrofit {
                         .header("Cache-Control", cacheControl)
                         .removeHeader("Pragma")//移除干扰信息
                         .build();
+                //Log.d("sqqq","响应"+response1.headers().toString());
                 return response1;
             }
 

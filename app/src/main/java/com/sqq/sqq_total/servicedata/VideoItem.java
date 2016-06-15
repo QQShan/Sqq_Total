@@ -1,26 +1,14 @@
 package com.sqq.sqq_total.servicedata;
 
-
-import java.sql.Timestamp;
-
 /**
- * Created by sqq on 2016/6/8.
- * recyclerview里一般的item
+ * Created by Administrator on 2016/6/15.
  */
-public class HeadlineItem {
-    String title;           //标题文字
+public class VideoItem {
     String description;     //简短的描述文字
     long time;            //数据发布的时间
     String picUrl;          //图片的地址
     String Url;             //点击之后要跳转去的url
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    int number;             //观看人数，int类型应该够了，不可能有20多亿人看的视频的
 
     public String getDescription() {
         return description;
@@ -52,5 +40,13 @@ public class HeadlineItem {
 
     public void setUrl(String url) {
         Url = url;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }
