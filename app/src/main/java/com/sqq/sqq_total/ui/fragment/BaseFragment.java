@@ -24,6 +24,8 @@ import rx.subscriptions.CompositeSubscription;
  */
 public abstract class BaseFragment extends Fragment {
 
+    public static final String bundleURL = "url";
+    public static final String bundleTITLE = "title";
     protected ViewGroup rootView;
     protected WeakReference activityRef;
 

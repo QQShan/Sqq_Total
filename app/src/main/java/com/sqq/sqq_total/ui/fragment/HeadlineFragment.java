@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.adapter.BaseAdapter;
+import com.sqq.sqq_total.presenter.HeadlinePresenter;
+import com.sqq.sqq_total.servicedata.HeadlineItem;
 import com.sqq.sqq_total.ui.activity.HeadlineActivity;
+import com.sqq.sqq_total.utils.TimerUtils;
 import com.sqq.sqq_total.view.SlideView;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
 
@@ -27,7 +30,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/5/30.
  */
-public class HeadlineFragment extends BaseFragment {
+public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.HeadlineView{
 
     //ViewPager vp;
     RecyclerView rv;
@@ -35,6 +38,8 @@ public class HeadlineFragment extends BaseFragment {
     SlideView sv;
     static int mCurSlideView = 0;
     private PagerAdapter mPagerAdapter;
+    HeadlinePresenter hPresenter;
+    List<HeadlineItem> headlineItemsitems;
 
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
@@ -52,6 +57,11 @@ public class HeadlineFragment extends BaseFragment {
         rv.setLayoutManager(new LinearLayoutManager(getSelfActivity(), LinearLayout.VERTICAL, false));
         rv.setItemAnimator(new DefaultItemAnimator());
 
+        //在这里发现一个问题，每次即使从磁盘缓存中读取内容依旧很慢,解决办法viewpager多缓存几页
+        hPresenter = new HeadlinePresenter(this);
+        headlineItemsitems = new ArrayList<>();
+        addSubscription(hPresenter.loadData(true, headlineItemsitems));
+
         /*mPagerAdapter = new MyViewPageAdapter(getChildFragmentManager());*/
         mPagerAdapter = new MyViewPageAdapter();
 
@@ -59,7 +69,8 @@ public class HeadlineFragment extends BaseFragment {
 
             @Override
             public int getItemCount() {
-                return resId.length;
+                //加以是因为还有轮播图
+                return headlineItemsitems.size()+1;
             }
 
             @Override
@@ -69,9 +80,14 @@ public class HeadlineFragment extends BaseFragment {
                     if (sv.getAdapter()==null)
                         sv.setAdapter(mPagerAdapter).startPlay();
                 }else{
-                    final TextView tv = holder.getView(R.id.name);
-                    tv.setText(des[position-1]);
-                    ImageView im = holder.getView(R.id.pic);
+                    final TextView hl_title = holder.getView(R.id.hl_title);
+                    hl_title.setText(headlineItemsitems.get(position-1).getTitle());
+                    final TextView hl_description = holder.getView(R.id.hl_description);
+                    hl_description.setText(headlineItemsitems.get(position-1).getDescription());
+                    final TextView hl_time = holder.getView(R.id.hl_time);
+                    hl_time.setText(TimerUtils.getTimeUpToNow(headlineItemsitems.get(position-1).getTime(),getSelfActivity()));
+
+                    ImageView im = holder.getView(R.id.hl_pic);
                     im.setImageResource(resId[position-1]);
                 }
             }
@@ -98,7 +114,10 @@ public class HeadlineFragment extends BaseFragment {
             @Override
             public void onItemClick(int position) {
                 if(getSelfActivity()!=null) {
-                    goTo(HeadlineActivity.class);
+                    Bundle bd= new Bundle();
+                    bd.putString(BaseFragment.bundleURL,headlineItemsitems.get(position-1).getUrl());
+                    bd.putString(BaseFragment.bundleTITLE,headlineItemsitems.get(position-1).getTitle());
+                    goToWithInfo(HeadlineActivity.class, bd);
                 }
                 Log.d("sqqq", "点击了"+position);
             }
@@ -124,6 +143,7 @@ public class HeadlineFragment extends BaseFragment {
         rv.setAdapter(ps);
         */
     }
+
     /*private class MyViewPageAdapter extends FragmentStatePagerAdapter {
         public MyViewPageAdapter(FragmentManager fm) {
             super(fm);
@@ -141,6 +161,18 @@ public class HeadlineFragment extends BaseFragment {
 
     }*/
 
+
+    @Override
+    public void intentTo() {
+
+    }
+
+    @Override
+    public void refresh(boolean isRefreshing) {
+
+    }
+
+///////////////以下都是轮播图相关的代码
     private class MyViewPageAdapter extends PagerAdapter{
         private List<View> mListView;
         public MyViewPageAdapter(){

@@ -9,4 +9,10 @@
     <string name="t_video">视频</string>
     <string name="t_more">更多</string>
 
+    <!--TimerUtils-->
+    <string name="tu_minute">分钟前</string>
+    <string name="tu_hour">小时前</string>
+    <string name="tu_halfhour">半小时前</string>
+    <string name="tu_day">天前</string>
+    <string name="tu_year">年前</string>
 </resources>

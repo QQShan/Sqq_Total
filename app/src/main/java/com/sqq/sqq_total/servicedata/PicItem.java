@@ -4,17 +4,26 @@ package com.sqq.sqq_total.servicedata;
  * Created by sqq on 2016/6/15.
  */
 public class PicItem {
-    String description;     //简短的描述文字
+    long id;                //id
+    String title;           //标题
     String picUrl;          //图片的地址
     String Url;             //点击之后要跳转去的url
+    long time;            //数据发布的时间
 
-
-    public String getDescription() {
-        return description;
+    public long getId() {
+        return id;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return title;
+    }
+
+    public void setDescription(String title) {
+        this.title = title;
     }
 
     public String getPicUrl() {
@@ -31,5 +40,13 @@ public class PicItem {
 
     public void setUrl(String url) {
         Url = url;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

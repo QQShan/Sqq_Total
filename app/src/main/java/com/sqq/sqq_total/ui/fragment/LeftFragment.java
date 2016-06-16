@@ -44,7 +44,8 @@ public class LeftFragment extends BaseFragment implements View.OnClickListener{
         tv_video.setOnClickListener(this);
 
         vp = (ViewPager) rootView.findViewById(R.id.left_viewpager);
-        /*vp.setOffscreenPageLimit(3);*/
+        //前后缓存三页
+        vp.setOffscreenPageLimit(3);
         mPagerAdapter = new MyViewPageAdapter(getChildFragmentManager());
         vp.setAdapter(mPagerAdapter);
         Log.d("sqqOn", mCurPage + "");

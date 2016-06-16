@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sqq.sqq_total.App;
+import com.sqq.sqq_total.AppConfig;
 import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.servicedata.HeadlineItem;
 import com.sqq.sqq_total.utils.FileLoader;
@@ -47,10 +48,9 @@ public class RightFragment extends BaseFragment {
         }
         tv.setText(xx);*/
 
-        tv.setText(TimerUtils.getTimeStampLong() + "");
         Subscription s = App.getRetrofitInstance().getApiService()
                 //.setDate(TimerUtils.getTimeStampLong())
-                .getLatestItemInfo(20)
+                .getLatestItemInfo(1)
                 .flatMap(new Func1<List<HeadlineItem>, Observable<HeadlineItem>>() {
                     @Override
                     public Observable<HeadlineItem> call(List<HeadlineItem> headlineItems) {
@@ -67,13 +67,13 @@ public class RightFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        Log.d("sqqq",throwable.toString());
+                        Log.d("sqqq", throwable.toString());
                     }
 
                     @Override
                     public void onNext(HeadlineItem s) {
-                        Log.d("ret",s.getDescription()+" "+s.getPicUrl()+" "
-                                +s.getTitle()+" "+s.getUrl()+ " "+TimerUtils.longTimeparseToString(s.getTime()));
+                        Log.d("ret", s.getDescription() + " " + s.getPicUrl() + " "
+                                + s.getTitle() + " " + s.getUrl() + " " + TimerUtils.longTimeparseToString(s.getTime()));
                         /*if(s){
                             tv.setText("可以");
                         }
@@ -82,6 +82,7 @@ public class RightFragment extends BaseFragment {
                         }*/
                         /*tv.setText(s.getDescription()+" "+s.getPicUrl()+" "
                         +s.getTitle()+" "+s.getUrl()+ " "+TimerUtils.longTimeparseToString(s.getTime()));*/
+                        tv.setText(TimerUtils.getTimeUpToNow(s.getTime(),getSelfActivity()));
                     }
                 });
         addSubscription(s);

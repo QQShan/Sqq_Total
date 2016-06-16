@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.sqq.sqq_total.R;
+import com.sqq.sqq_total.ui.fragment.BaseFragment;
 import com.sqq.sqq_total.view.BrowserLayout;
 
 /**
@@ -21,16 +22,17 @@ public class HeadlineActivity extends BaseActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_headline);
-
+        String url = getIntent().getExtras().getString(BaseFragment.bundleURL);
+        String title = getIntent().getExtras().getString(BaseFragment.bundleTITLE);
         bl = (BrowserLayout) findViewById(R.id.act_headline_bl);
-        bl.setTitleText("头条啊！");
+        bl.setTitleText(title);
         bl.setOnImgClickListener(new BrowserLayout.OnImgClickCallback() {
             @Override
             public void OnImgClick() {
                 finishActivity();
             }
         });
-        bl.loadUrl("http://10.0.3.114/AndroidService/pic/1.jpg");
+        bl.loadUrl(url);
     }
 
 

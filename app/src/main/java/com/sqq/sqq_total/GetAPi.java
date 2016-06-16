@@ -16,12 +16,32 @@ import rx.Observable;
 
 /**
  * Created by sqq on 2016/6/8.
+ * 不指定Cache-Control也缓存了，但是过期时间很短
  */
 public interface GetAPi {
-    //取headlineItem ,不指定Cache-Control也缓存了，但是过期时间很短
-    //count加载的条数
+    /**
+     * 加载最新的count条数据，用于下拉刷新和一开始加载的时候
+     *
+     * @param count
+     * @return
+     */
+    @Headers("Cache-Control:max-age=640000")
     @GET("headlineitem.php")
     Observable<List<HeadlineItem>> getLatestItemInfo(@Query("count") int count);
+
+    /**
+     * 取小于这个id的count条数据，用于加载更多
+     * @param count
+     * @param id
+     * @return
+     */
+    @GET("headlineitem.php")
+    Observable<List<HeadlineItem>> getItemInfo(@Query("count") int count,@Query("id") int id);
+
+
+
+
+
 
     /**
      * 测试缓存用的

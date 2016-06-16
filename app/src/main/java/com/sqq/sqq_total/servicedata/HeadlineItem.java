@@ -8,11 +8,20 @@ import java.sql.Timestamp;
  * recyclerview里一般的item
  */
 public class HeadlineItem {
+    long id;                //id
     String title;           //标题文字
     String description;     //简短的描述文字
     long time;            //数据发布的时间
     String picUrl;          //图片的地址
     String Url;             //点击之后要跳转去的url
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

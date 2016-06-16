@@ -20,4 +20,11 @@ public class AppConfig {
      * retrofit2.0后baseurl必须要以/结尾
      */
     public static String BaseURL="http://10.0.3.114/AndroidService/";
+    /**
+     * 默认头条页一次加载的数目
+     */
+    public static int headlineItemCount=20;
+    public static int textItemCount=20;
+    public static int picItemCount=20;
+    public static int videoItemCount=20;
 }

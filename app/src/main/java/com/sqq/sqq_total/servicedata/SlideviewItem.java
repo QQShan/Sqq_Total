@@ -1,15 +1,15 @@
 package com.sqq.sqq_total.servicedata;
 
 /**
- * Created by sqq on 2016/6/15.
+ * Created by sqq on 2016/6/16.
+ * 轮播图数据
  */
-public class TextItem {
+public class SlideviewItem {
     long id;                //id
-    String title;           //标题文字
-    String description;     //简短的描述文字
-    long time;            //数据发布的时间
+    String title;           //标题
     String picUrl;          //图片的地址
     String Url;             //点击之后要跳转去的url
+    long time;            //数据发布的时间
 
     public long getId() {
         return id;
@@ -19,28 +19,12 @@ public class TextItem {
         this.id = id;
     }
 
-    public String getTitle() {
+    public String getDescription() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setDescription(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
     }
 
     public String getPicUrl() {
@@ -57,5 +41,13 @@ public class TextItem {
 
     public void setUrl(String url) {
         Url = url;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

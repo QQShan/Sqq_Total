@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Sqq_Total</string>
+
+    <!--配置文件的key-->
+    <string name="prefer_headlineItemId">headlineItemId</string>    //已经加载的内容最后一条的id
+    <string name="prefer_picItemId">picItemId</string>              //已经加载的内容最后一条的id
+    <string name="prefer_textItemId">textItemId</string>            //已经加载的内容最后一条的id
+    <string name="prefer_videoItemId">videoItemId</string>          //已经加载的内容最后一条的id
 </resources>
