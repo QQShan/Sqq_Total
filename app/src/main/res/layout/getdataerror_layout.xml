@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/getdataerror_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:textSize="30sp"
+    android:textColor="@color/red"
+    android:text="@string/network_error"
+    tools:text="sadfgdfg">
+
+</TextView>
+
+<!--获取网络数据异常的时候显示的布局-->

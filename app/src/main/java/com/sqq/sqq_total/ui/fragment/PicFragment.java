@@ -12,22 +12,36 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.adapter.BaseAdapter;
+import com.sqq.sqq_total.presenter.PicPresenter;
+import com.sqq.sqq_total.servicedata.PicItem;
+import com.sqq.sqq_total.ui.activity.HeadlineActivity;
+import com.sqq.sqq_total.view.LoadingView;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sqq on 2016/5/30.
  * 问题滑动的时候会卡一下
  */
-public class PicFragment extends BaseFragment {
+public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
 
     RecyclerView rv;
+    TextView tv;
+    LoadingView lv;
+
     BaseAdapter adapter;
+    PicPresenter pp;
+    List<PicItem> picitem_list;
+
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
             , R.drawable.img9, R.drawable.img10, R.drawable.img11
@@ -40,32 +54,56 @@ public class PicFragment extends BaseFragment {
 
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pic,container,false);
+        pp = new PicPresenter(this);
+        initData();
+
+        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pic, container, false);
+
+        tv = (TextView) rootView.findViewById(R.id.pic_error);
 
         rv = (RecyclerView) rootView.findViewById(R.id.pic_rv);
         rv.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
         //rv.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
         rv.setItemAnimator(new DefaultItemAnimator());
+    }
 
+    @Override
+    public void initData() {
+        picitem_list = new ArrayList<>();
+        lv = new LoadingView(getSelfActivity());
+        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));
+
+        addSubscription(pp.loadItemData(true, picitem_list));
+
+        lv.setLoadExitListener(new LoadingView.LoadExit() {
+            @Override
+            public void exit() {
+                pp.unsubscribe();
+            }
+        });
+    }
+
+    @Override
+    public void initViews() {
+        lv.dismissDialog();
         adapter = new BaseAdapter() {
-
             @Override
             public int getItemCount() {
-                return resId.length;
+                return picitem_list.size();
             }
 
             @Override
             protected void onBindView(BaseViewHolder holder, int position) {
-                final TextView tv = holder.getView(R.id.name);
-                tv.setText(des[position]);
+                //final TextView tv = holder.getView(R.id.name);
+                //tv.setText(des[position]);
                 ImageView im = holder.getView(R.id.pic);
                 im.setImageResource(resId[position]);
                 //im.setImageResource(R.mipmap.ic_launcher);
                 //下面的功能是计算出图片的显著的颜色赋值给textview，这个功能可以去掉
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), resId[position]);
+                //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), resId[position]);
                 //异步获得bitmap图片颜色值
-                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                /*Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                     @Override
                     public void onGenerated(Palette palette) {
                         Palette.Swatch vibrant = palette.getVibrantSwatch();//有活力
@@ -86,7 +124,7 @@ public class PicFragment extends BaseFragment {
                                     vibrant.getTitleTextColor());
                         }
                     }
-                });
+                });*/
             }
 
             @Override
@@ -97,10 +135,33 @@ public class PicFragment extends BaseFragment {
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Log.d("sqqq", "点击了"+position);
+                intentTo(picitem_list.get(position).getDescription(), picitem_list.get(position).getUrl());
             }
         });
         rv.setAdapter(adapter);
     }
 
+    @Override
+    public void intentTo(String title, String url) {
+        Bundle bd= new Bundle();
+        bd.putString(BaseFragment.bundleURL,url);
+        bd.putString(BaseFragment.bundleTITLE,title);
+        goToWithInfo(HeadlineActivity.class, bd);
+    }
+
+    @Override
+    public void getDataError(String info) {
+        tv.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideErrorView() {
+        tv.setVisibility(View.GONE);
+    }
+
+
+    @Override
+    public void refresh(boolean isRefreshing) {
+
+    }
 }

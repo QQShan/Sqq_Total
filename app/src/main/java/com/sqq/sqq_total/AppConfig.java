@@ -23,6 +23,7 @@ public class AppConfig {
     /**
      * 默认头条页一次加载的数目
      */
+    public static int slideviewItemCount=4;
     public static int headlineItemCount=20;
     public static int textItemCount=20;
     public static int picItemCount=20;

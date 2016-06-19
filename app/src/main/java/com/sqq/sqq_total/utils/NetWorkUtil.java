@@ -98,6 +98,8 @@ public class NetWorkUtil {
                 NetworkListener listener = networklisteners.get(i);
                 if (listener != null) {
                     listener.onConnected(connected);
+                }else{
+                    removeNetWorkListener(listener);
                 }
             }
         }

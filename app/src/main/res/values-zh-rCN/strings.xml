@@ -9,10 +9,22 @@
     <string name="t_video">视频</string>
     <string name="t_more">更多</string>
 
+    <!--network相关的信息-->
+    <string name="network_error">网络异常，无法连接服务器，请检查网络!</string>
+
     <!--TimerUtils-->
     <string name="tu_minute">分钟前</string>
     <string name="tu_hour">小时前</string>
     <string name="tu_halfhour">半小时前</string>
     <string name="tu_day">天前</string>
     <string name="tu_year">年前</string>
+
+    <!--NumberUtils-->
+    <string name="nu_times">次</string>
+    <string name="nu_wtimes">万次</string>
+    <string name="nu_ytimes">亿次</string>
+
+    <!--LoadingView-->
+    <string name="lv_tip">正在努力加载...</string>
+
 </resources>

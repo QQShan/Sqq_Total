@@ -1,0 +1,6 @@
+//按照id降序排列，查询前 $count条数据
+$sqltest="select headlineItemTitle,headlineItemDescription,headlineItemTime,headlineItemPicUrl,headlineItemUrl
+ from tb_headlineItem order by headlineItemId desc limit $count"; 
+ //按照id降序排序，查询id比7小的前$count"条数据
+ $sqltest="select headlineItemTitle,headlineItemDescription,headlineItemTime,headlineItemPicUrl,headlineItemUrl
+ from tb_headlineItem where headlineItemId<7  order by headlineItemId desc limit $count";  

@@ -16,57 +16,98 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.adapter.BaseAdapter;
+import com.sqq.sqq_total.presenter.VideoPresenter;
+import com.sqq.sqq_total.servicedata.VideoItem;
+import com.sqq.sqq_total.ui.activity.HeadlineActivity;
+import com.sqq.sqq_total.utils.NumberUtils;
+import com.sqq.sqq_total.utils.TimerUtils;
+import com.sqq.sqq_total.view.LoadingView;
 import com.sqq.sqq_total.view.SlideView;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Administrator on 2016/5/30.
+ * Created by sqq on 2016/5/30.
  */
-public class VideoFragment extends BaseFragment {
+public class VideoFragment extends BaseFragment implements VideoPresenter.VideoFmView{
 
     RecyclerView rv;
+    TextView tv;
+    LoadingView lv;
+
     BaseAdapter adapter;
+    VideoPresenter vp;
+    List<VideoItem> videoitem_list;
 
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
             , R.drawable.img9, R.drawable.img10, R.drawable.img11
             , R.drawable.img12, R.drawable.img13, R.drawable.img14};
-    private String des[] = {"云层里的阳光", "好美的海滩", "好美的海滩", "夕阳西下的美景", "夕阳西下的美景"
-            , "夕阳西下的美景", "夕阳西下的美景", "夕阳西下的美景", "好美的海滩","好美的海滩", "好美的海滩"
-            , "夕阳西下的美景", "夕阳西下的美景", "夕阳西下的美景"};
 
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        vp = new VideoPresenter(this);
+        initData();
+
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_video,container,false);
+
+        tv = (TextView) rootView.findViewById(R.id.video_error);
+
         rv = (RecyclerView) rootView.findViewById(R.id.video_rv);
         rv.setLayoutManager(new GridLayoutManager(getSelfActivity(), 2));
         rv.setItemAnimator(new DefaultItemAnimator());
+    }
 
+    @Override
+    public void initData() {
+        videoitem_list = new ArrayList<>();
+        lv = new LoadingView(getSelfActivity());
+        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));
+
+        addSubscription(vp.loadItemData(true, videoitem_list));
+
+        lv.setLoadExitListener(new LoadingView.LoadExit() {
+            @Override
+            public void exit() {
+                vp.unsubscribe();
+            }
+        });
+    }
+
+    @Override
+    public void initViews() {
+        lv.dismissDialog();
         adapter = new BaseAdapter() {
 
             @Override
             public int getItemCount() {
-                return resId.length;
+                return videoitem_list.size();
             }
 
             @Override
             protected void onBindView(BaseViewHolder holder, int position) {
-                final TextView tv = holder.getView(R.id.name);
-                tv.setText(des[position]);
-                ImageView im = holder.getView(R.id.pic);
+                final TextView tv = holder.getView(R.id.videoitem_desc);
+                tv.setText(videoitem_list.get(position).getDescription());
+                TextView tv1 = holder.getView(R.id.videoitem_time);
+                tv1.setText(TimerUtils.getTimeUpToNow(videoitem_list.get(position).getTime(),getSelfActivity()));
+
+                TextView tv2 = holder.getView(R.id.videoitem_counts);
+                tv2.setText(NumberUtils.getVideoWatchNumber(getSelfActivity(),videoitem_list.get(position)
+                .getNumber()));
+
+                ImageView im = holder.getView(R.id.videoitem_pic);
                 im.setImageResource(resId[position]);
-                TextView tv1 = holder.getView(R.id.info_time);
-                tv1.setText("1小时以前");
-                TextView tv2 = holder.getView(R.id.info_counts);
-                tv2.setText("好几万人看");
+
             }
 
             @Override
@@ -77,12 +118,33 @@ public class VideoFragment extends BaseFragment {
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Log.d("sqqq", "点击了"+position);
+                intentTo(videoitem_list.get(position).getDescription(), videoitem_list.get(position).getUrl());
             }
         });
 
         rv.setAdapter(adapter);
-
     }
 
+    @Override
+    public void intentTo(String title, String url) {
+        Bundle bd= new Bundle();
+        bd.putString(BaseFragment.bundleURL,url);
+        bd.putString(BaseFragment.bundleTITLE,title);
+        goToWithInfo(HeadlineActivity.class, bd);
+    }
+
+    @Override
+    public void getDataError(String info) {
+        tv.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideErrorView() {
+        tv.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void refresh(boolean isRefreshing) {
+
+    }
 }

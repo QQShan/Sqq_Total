@@ -16,6 +16,7 @@ import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.servicedata.HeadlineItem;
 import com.sqq.sqq_total.utils.FileLoader;
 import com.sqq.sqq_total.utils.TimerUtils;
+import com.sqq.sqq_total.view.LoadingView;
 
 import java.io.File;
 import java.sql.Timestamp;
@@ -34,6 +35,7 @@ import rx.schedulers.Schedulers;
  */
 public class RightFragment extends BaseFragment {
 
+    Subscription s;
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_right, container, false);
@@ -48,21 +50,29 @@ public class RightFragment extends BaseFragment {
         }
         tv.setText(xx);*/
 
-        Subscription s = App.getRetrofitInstance().getApiService()
+        /*final LoadingView lv = new LoadingView(getSelfActivity());
+        lv.showDialog("正在加载。。。");*/
+
+        s = App.getRetrofitInstance().getApiService()
                 //.setDate(TimerUtils.getTimeStampLong())
                 .getLatestItemInfo(1)
-                .flatMap(new Func1<List<HeadlineItem>, Observable<HeadlineItem>>() {
+                .map(new Func1<List<HeadlineItem>, List<HeadlineItem>>() {
                     @Override
-                    public Observable<HeadlineItem> call(List<HeadlineItem> headlineItems) {
-                        return Observable.from(headlineItems);
+                    public List<HeadlineItem> call(List<HeadlineItem> headlineItems) {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return headlineItems;
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<HeadlineItem>() {
+                .subscribe(new Subscriber<List<HeadlineItem>>() {
                     @Override
                     public void onCompleted() {
-
+                        //lv.dismissDialog();
                     }
 
                     @Override
@@ -71,9 +81,9 @@ public class RightFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onNext(HeadlineItem s) {
-                        Log.d("ret", s.getDescription() + " " + s.getPicUrl() + " "
-                                + s.getTitle() + " " + s.getUrl() + " " + TimerUtils.longTimeparseToString(s.getTime()));
+                    public void onNext(List<HeadlineItem> s) {
+                        //Log.d("ret", s.get(0).getDescription() + " " + s.get(0).getPicUrl() + " "
+                        //        + s.get(0).getTitle() + " " + s.get(0).getUrl() + " " + TimerUtils.longTimeparseToString(s.get(0).getTime()));
                         /*if(s){
                             tv.setText("可以");
                         }
@@ -82,9 +92,17 @@ public class RightFragment extends BaseFragment {
                         }*/
                         /*tv.setText(s.getDescription()+" "+s.getPicUrl()+" "
                         +s.getTitle()+" "+s.getUrl()+ " "+TimerUtils.longTimeparseToString(s.getTime()));*/
-                        tv.setText(TimerUtils.getTimeUpToNow(s.getTime(),getSelfActivity()));
+                        tv.setText(TimerUtils.getTimeUpToNow(s.get(0).getTime(),getSelfActivity()));
                     }
                 });
+
         addSubscription(s);
+
+        /*lv.setLoadExitListener(new LoadingView.LoadExit() {
+            @Override
+            public void exit() {
+                s.unsubscribe();
+            }
+        });*/
     }
 }

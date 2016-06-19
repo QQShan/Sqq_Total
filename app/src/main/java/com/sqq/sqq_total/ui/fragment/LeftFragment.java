@@ -60,7 +60,7 @@ public class LeftFragment extends BaseFragment implements View.OnClickListener{
             @Override
             public void onPageSelected(int position) {
                 mCurPage = position;
-                Log.d("sqqF",""+mCurPage);
+
                 changeTitle(position);
             }
 
@@ -98,6 +98,7 @@ public class LeftFragment extends BaseFragment implements View.OnClickListener{
 
         @Override
         public Fragment getItem(int position) {
+            Log.d("sqqF",""+mCurPage);
             if(position==0){
                 return new HeadlineFragment();
             }else if(position==1){

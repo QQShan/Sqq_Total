@@ -1,5 +1,6 @@
 package com.sqq.sqq_total.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,54 +19,84 @@ import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.adapter.BaseAdapter;
 import com.sqq.sqq_total.presenter.HeadlinePresenter;
 import com.sqq.sqq_total.servicedata.HeadlineItem;
+import com.sqq.sqq_total.servicedata.SlideviewItem;
 import com.sqq.sqq_total.ui.activity.HeadlineActivity;
 import com.sqq.sqq_total.utils.TimerUtils;
+import com.sqq.sqq_total.view.LoadingView;
 import com.sqq.sqq_total.view.SlideView;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/5/30.
+ * Created by sqq on 2016/5/30.
  */
 public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.HeadlineView{
 
     //ViewPager vp;
     RecyclerView rv;
+    TextView tv;
     BaseAdapter adapter;
     SlideView sv;
+    LoadingView lv;
+
     static int mCurSlideView = 0;
     private PagerAdapter mPagerAdapter;
     HeadlinePresenter hPresenter;
     List<HeadlineItem> headlineItemsitems;
+    List<SlideviewItem> slideviewItemsitems;
+    List<View> views;
 
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
             , R.drawable.img9, R.drawable.img10, R.drawable.img11
             , R.drawable.img12, R.drawable.img13, R.drawable.img14};
-    private String des[] = {"云层里的阳光", "好美的海滩", "好美的海滩", "夕阳西下的美景", "夕阳西下的美景"
-            , "夕阳西下的美景", "夕阳西下的美景", "夕阳西下的美景", "好美的海滩","好美的海滩", "好美的海滩"
-            , "夕阳西下的美景", "夕阳西下的美景", "夕阳西下的美景"};
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
 
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_headline, container, false);
 
+        //在这里发现一个问题，每次即使从磁盘缓存中读取内容依旧很慢,解决办法viewpager多缓存几页
+        hPresenter = new HeadlinePresenter(this);
+        initData();
+
         rv = (RecyclerView) rootView.findViewById(R.id.headline_rv);
         rv.setLayoutManager(new LinearLayoutManager(getSelfActivity(), LinearLayout.VERTICAL, false));
         rv.setItemAnimator(new DefaultItemAnimator());
 
-        //在这里发现一个问题，每次即使从磁盘缓存中读取内容依旧很慢,解决办法viewpager多缓存几页
-        hPresenter = new HeadlinePresenter(this);
+        tv = (TextView) rootView.findViewById(R.id.headline_error);
+    }
+
+    @Override
+    public void initData() {
+        Log.d("sqqq","initData");
         headlineItemsitems = new ArrayList<>();
-        addSubscription(hPresenter.loadData(true, headlineItemsitems));
+        slideviewItemsitems = new ArrayList<>();
+        views = new ArrayList<>();
 
-        /*mPagerAdapter = new MyViewPageAdapter(getChildFragmentManager());*/
-        mPagerAdapter = new MyViewPageAdapter();
+        lv = new LoadingView(getSelfActivity());
+        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));
 
+        addSubscription(hPresenter.loadItemData(true, headlineItemsitems, slideviewItemsitems));
+        lv.setLoadExitListener(new LoadingView.LoadExit() {
+            @Override
+            public void exit() {
+                hPresenter.unsubscribe();
+            }
+        });
+    }
+
+    @Override
+    public void initViews() {
+        //加载完数据
+        lv.dismissDialog();
+
+        hPresenter.initSlideView(slideviewItemsitems, getSelfActivity(), views);
         adapter = new BaseAdapter() {
 
             @Override
@@ -78,7 +110,8 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
                 if(position==0) {
                     sv = holder.getView(R.id.headline_viewpager);
                     if (sv.getAdapter()==null)
-                        sv.setAdapter(mPagerAdapter).startPlay();
+                        mPagerAdapter = new MyViewPageAdapter();
+                    sv.setAdapter(mPagerAdapter).startPlay();
                 }else{
                     final TextView hl_title = holder.getView(R.id.hl_title);
                     hl_title.setText(headlineItemsitems.get(position-1).getTitle());
@@ -87,6 +120,7 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
                     final TextView hl_time = holder.getView(R.id.hl_time);
                     hl_time.setText(TimerUtils.getTimeUpToNow(headlineItemsitems.get(position-1).getTime(),getSelfActivity()));
 
+                    //图片加载的话先放一放
                     ImageView im = holder.getView(R.id.hl_pic);
                     im.setImageResource(resId[position-1]);
                 }
@@ -113,58 +147,33 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if(getSelfActivity()!=null) {
-                    Bundle bd= new Bundle();
-                    bd.putString(BaseFragment.bundleURL,headlineItemsitems.get(position-1).getUrl());
-                    bd.putString(BaseFragment.bundleTITLE,headlineItemsitems.get(position-1).getTitle());
-                    goToWithInfo(HeadlineActivity.class, bd);
+                Log.d("sqqq", "点击了" + position);
+                if (getSelfActivity() != null && position != 0) {
+                    intentTo(headlineItemsitems.get(position - 1).getTitle(), headlineItemsitems.get(position - 1).getUrl());
                 }
-                Log.d("sqqq", "点击了"+position);
             }
         });
         rv.setAdapter(adapter);
-
-        //sv = (SlideView) rootView.findViewById(R.id.headline_viewpager);
-
-        /*sv = new SlideView((Context)activityRef.get());
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
-        sv.setLayoutParams(lp);
-        mPagerAdapter = new MyViewPageAdapter(getChildFragmentManager());
-        sv.setAdapter(mPagerAdapter).setCurrentItem(mCurSlideView).startPlay();*/
-
-        /*
-        这是其中一种添加头部的方式
-        ImageView img = new ImageView((Context)activityRef.get());
-        img.setImageResource(R.mipmap.ic_launcher);
-        PlusRecyclerViewAdapter ps = new PlusRecyclerViewAdapter(adapter);
-        ps.setHeaderView(img);
-        ps.setFooterView(img);
-        rv.setAdapter(ps);
-        */
     }
 
-    /*private class MyViewPageAdapter extends FragmentStatePagerAdapter {
-        public MyViewPageAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return viewpagerFragment.newInstance(position);
-        }
-
-        @Override
-        public int getCount() {
-            return 4;
-        }
-
-    }*/
-
+    @Override
+    public void intentTo(String title,String url) {
+        Bundle bd= new Bundle();
+        bd.putString(BaseFragment.bundleURL,url);
+        bd.putString(BaseFragment.bundleTITLE,title);
+        goToWithInfo(HeadlineActivity.class, bd);
+    }
 
     @Override
-    public void intentTo() {
+    public void getDataError(String info) {
+        tv.setVisibility(View.VISIBLE);
 
+        /*tv.setText(info);*/
+    }
+
+    @Override
+    public void hideErrorView() {
+        tv.setVisibility(View.GONE);
     }
 
     @Override
@@ -172,16 +181,14 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
     }
 
-///////////////以下都是轮播图相关的代码
+    ///////////////以下都是轮播图相关的代码
     private class MyViewPageAdapter extends PagerAdapter{
-        private List<View> mListView;
         public MyViewPageAdapter(){
-            mListView = new ArrayList<>();
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return views.size();
         }
 
         @Override
@@ -191,24 +198,12 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(mListView.get(position));
+            container.removeView(views.get(position));
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            ViewGroup v= (ViewGroup)LayoutInflater.from(getSelfActivity()).inflate(R.layout.slideviewitem, null);
-            v.setClickable(true);
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("sqqq","pos"+position);
-                }
-            });
-            ImageView img = (ImageView) v.findViewById(R.id.img);
-            img.setImageResource(resId[position]);
-            TextView tv = (TextView) v.findViewById(R.id.tv);
-            tv.setText(des[position]);
-            mListView.add(position,v);
+            View v = views.get(position);
             container.addView(v,0);
             return v;
         }

@@ -20,16 +20,15 @@
 
         <!--下面实现了高度固定宽度固定-->
         <ImageView
-            android:id="@+id/pic"
+            android:id="@+id/videoitem_pic"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_centerInParent="true"
             android:scaleType="fitXY"
-            android:adjustViewBounds="true"
             tools:src="@mipmap/ic_launcher" />
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/videoitem_desc"
             android:layout_width="match_parent"
             android:layout_height="40dip"
             android:padding="5dp"
@@ -40,18 +39,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/info_time"
+                android:id="@+id/videoitem_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignBaseline="@+id/info_counts"
+                android:layout_alignBaseline="@+id/videoitem_counts"
                 android:gravity="center_vertical"
                 android:padding="5dp"
                 tools:text="图片描述"
                 android:textColor="@color/colorApGray"
                 android:textSize="16sp" />
             <TextView
-                android:id="@+id/info_counts"
+                android:id="@+id/videoitem_counts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

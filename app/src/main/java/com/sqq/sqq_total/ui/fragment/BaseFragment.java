@@ -44,8 +44,10 @@ public abstract class BaseFragment extends Fragment {
         if (this.mCompositeSubscription == null) {
             this.mCompositeSubscription = new CompositeSubscription();
         }
-
-        this.mCompositeSubscription.add(s);
+        if(!s.isUnsubscribed()) {
+            //如果没有被unsubscribed
+            this.mCompositeSubscription.add(s);
+        }
     }
 
     @Override

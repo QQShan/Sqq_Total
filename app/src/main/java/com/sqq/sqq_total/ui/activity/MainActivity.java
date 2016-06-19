@@ -18,25 +18,71 @@ import com.sqq.sqq_total.ui.fragment.RightFragment;
 public class MainActivity extends AppCompatActivity implements MainPresenter.MainView,View.OnClickListener{
 
     public MainPresenter mainPresenter;
+    static final String KEY_VALUE="KEY_VALUE";
+    LeftFragment leftFragment;
+    RightFragment rightFragment;
+
+    static final int INDEX_LEFT=0;
+    static final int INDEX_RIGHT=1;
+
     public Fragment mCurFragmet;
     TextView tv_left,tv_right;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mainPresenter = new MainPresenter(this);
         tv_left = (TextView) findViewById(R.id.left);
         tv_right = (TextView) findViewById(R.id.right);
         tv_left.setOnClickListener(this);
         tv_right.setOnClickListener(this);
 
-        mCurFragmet = new LeftFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.id_context, mCurFragmet).commit();
-        tv_left.setTextColor(getResources().getColor(R.color.colorYellow));
-        Drawable top = getResources().getDrawable(R.drawable.main_index_my_pressed);
-        top.setBounds(0,0,top.getMinimumWidth(),top.getMinimumHeight());
-        tv_left.setCompoundDrawables(null, top, null, null);
+        if(savedInstanceState!=null){
+            // 在内存重启的时候调用
+            leftFragment = (LeftFragment) getSupportFragmentManager()
+                    .findFragmentByTag(leftFragment.getClass().getName());
+            rightFragment = (RightFragment) getSupportFragmentManager()
+                    .findFragmentByTag(rightFragment.getClass().getName());
+            Fragment show,hide;
+            int index = savedInstanceState.getInt(KEY_VALUE);
+            if(index==INDEX_LEFT){
+                show = leftFragment;
+                hide = rightFragment;
+            }else{
+                show = rightFragment;
+                hide = leftFragment;
+            }
+            getSupportFragmentManager().beginTransaction()
+                    .show(show)
+                    .hide(hide)
+                    .commit();
+            mCurFragmet = show;
+        }else {
+            leftFragment = new LeftFragment();
+            rightFragment = new RightFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.id_context, leftFragment
+                            , leftFragment.getClass().getName())
+                    .add(R.id.id_context, rightFragment
+                            , rightFragment.getClass().getName())
+                    .hide(rightFragment)
+                    //.hide(leftFragment)
+                    .commit();
+            mCurFragmet = leftFragment;
+            //mCurFragmet = rightFragment;
+
+        }
+        whichViewToShow();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mCurFragmet instanceof LeftFragment)
+            outState.putInt(KEY_VALUE,INDEX_LEFT);
+        else
+            outState.putInt(KEY_VALUE,INDEX_RIGHT);
     }
 
     @Override
@@ -46,56 +92,56 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Mai
 
     @Override
     public void onClick(View v) {
+        Fragment oldFragment = mCurFragmet;
         switch (v.getId()){
             case R.id.left:
                 if(mCurFragmet instanceof LeftFragment)
                     return;
-                changeFm(R.id.left);
+
+                mCurFragmet = leftFragment;
                 break;
             case R.id.right:
                 if(mCurFragmet instanceof RightFragment)
                     return;
-                changeFm(R.id.right);
+                mCurFragmet = rightFragment;
                 break;
             default:
                 break;
         }
+        whichViewToShow();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .hide(oldFragment)
+                .show(mCurFragmet)
+                /*.replace(R.id.id_context, mCurFragmet)*/
+                /*.addToBackStack(null)*/
+                .commit();
     }
 
-    private void changeFm(int id){
+
+    public void whichViewToShow(){
         tv_left.setTextColor(getResources().getColor(R.color.colorWhite));
         Drawable l_top = getResources().getDrawable(R.drawable.main_index_my_normal);
-        l_top.setBounds(0,0,l_top.getMinimumWidth(),l_top.getMinimumHeight());
-        tv_left.setCompoundDrawables(null,l_top,null,null);
+        l_top.setBounds(0, 0, l_top.getMinimumWidth(), l_top.getMinimumHeight());
+        tv_left.setCompoundDrawables(null, l_top, null, null);
 
         tv_right.setTextColor(getResources().getColor(R.color.colorWhite));
         Drawable r_top = getResources().getDrawable(R.drawable.main_index_more_normal);
-        r_top.setBounds(0,0,r_top.getMinimumWidth(),r_top.getMinimumHeight());
-        tv_right.setCompoundDrawables(null,r_top,null,null);
+        r_top.setBounds(0, 0, r_top.getMinimumWidth(), r_top.getMinimumHeight());
+        tv_right.setCompoundDrawables(null, r_top, null, null);
 
-        switch(id){
-            case R.id.left:
-                mCurFragmet = new LeftFragment();
-                tv_left.setTextColor(getResources().getColor(R.color.colorYellow));
-                l_top = getResources().getDrawable(R.drawable.main_index_my_pressed);
-                l_top.setBounds(0, 0, l_top.getMinimumWidth(), l_top.getMinimumHeight());
-                tv_left.setCompoundDrawables(null,l_top,null,null);
-                break;
-            case R.id.right:
-                mCurFragmet = new RightFragment();
-                tv_right.setTextColor(getResources().getColor(R.color.colorYellow));
-                r_top = getResources().getDrawable(R.drawable.main_index_more_pressed);
-                r_top.setBounds(0, 0, r_top.getMinimumWidth(), r_top.getMinimumHeight());
-                tv_right.setCompoundDrawables(null,r_top,null,null);
-                break;
-            default:
-                break;
+        if(mCurFragmet instanceof LeftFragment){
+            tv_left.setTextColor(getResources().getColor(R.color.colorYellow));
+            l_top = getResources().getDrawable(R.drawable.main_index_my_pressed);
+            l_top.setBounds(0, 0, l_top.getMinimumWidth(), l_top.getMinimumHeight());
+            tv_left.setCompoundDrawables(null,l_top,null,null);
+        }else{
+            tv_right.setTextColor(getResources().getColor(R.color.colorYellow));
+            r_top = getResources().getDrawable(R.drawable.main_index_more_pressed);
+            r_top.setBounds(0, 0, r_top.getMinimumWidth(), r_top.getMinimumHeight());
+            tv_right.setCompoundDrawables(null, r_top, null, null);
         }
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.id_context, mCurFragmet)
-                /*.addToBackStack(null)*/
-                .commit();
+
     }
 
 }

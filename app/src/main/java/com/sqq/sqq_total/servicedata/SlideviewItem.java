@@ -9,7 +9,7 @@ public class SlideviewItem {
     String title;           //标题
     String picUrl;          //图片的地址
     String Url;             //点击之后要跳转去的url
-    long time;            //数据发布的时间
+    long time;              //数据发布的时间
 
     public long getId() {
         return id;
@@ -19,11 +19,11 @@ public class SlideviewItem {
         this.id = id;
     }
 
-    public String getDescription() {
+    public String getTitle() {
         return title;
     }
 
-    public void setDescription(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 

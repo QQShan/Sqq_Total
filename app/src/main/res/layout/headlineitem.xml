@@ -3,6 +3,7 @@
     xmlns:card="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/cardviewstyle"
+    android:layout_height="120dp"
     card:cardBackgroundColor="@android:color/white"
     card:cardCornerRadius="0dp"
     card:cardElevation="5dp"
@@ -18,16 +19,13 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <!--下面实现了高度固定宽度自适应-->
+        <!--下面实现了高度固定宽度固定-->
         <ImageView
             android:id="@+id/hl_pic"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:scaleType="fitXY"
-            android:adjustViewBounds="true"
-            android:maxWidth="1000dip"
-            android:maxHeight="1000dip"
             tools:src="@mipmap/ic_launcher" />
         <FrameLayout
             android:layout_width="match_parent"

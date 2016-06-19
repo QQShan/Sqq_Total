@@ -7,7 +7,7 @@ import android.content.Intent;
 import com.sqq.sqq_total.utils.NetWorkUtil;
 
 /**
- * Created by Administrator on 2016/6/13.
+ * Created by sqq on 2016/6/13.
  */
 public class NetWorkReceiver extends BroadcastReceiver {
     @Override

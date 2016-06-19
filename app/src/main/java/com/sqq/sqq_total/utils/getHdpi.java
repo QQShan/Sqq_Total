@@ -6,7 +6,7 @@ import android.content.Context;
  * Created by sqq on 2016/6/1.
  * 主要是算出资源改放在哪个drawable下
  */
-public class getHdpi {
+public class GetHdpi {
 
     /**
      * xdpi是宽度的dpi值

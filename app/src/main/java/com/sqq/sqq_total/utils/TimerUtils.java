@@ -59,7 +59,7 @@ public class TimerUtils {
             if(tRat==0.5){
                 ret = context.getString(R.string.tu_halfhour);
             }else{
-                ret = (60*tRat)+context.getString(R.string.tu_minute);
+                ret = (int)(60*tRat)+context.getString(R.string.tu_minute);
             }
         }else if(tRat>=1&&tRat<=24){
             //几小时前
