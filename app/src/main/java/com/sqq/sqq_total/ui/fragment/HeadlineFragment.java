@@ -38,7 +38,7 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
     TextView tv;
     BaseAdapter adapter;
     SlideView sv;
-    LoadingView lv;
+    //LoadingView lv;
 
     static int mCurSlideView = 0;
     private PagerAdapter mPagerAdapter;
@@ -63,38 +63,40 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
         //在这里发现一个问题，每次即使从磁盘缓存中读取内容依旧很慢,解决办法viewpager多缓存几页
         hPresenter = new HeadlinePresenter(this);
-        initData();
 
         rv = (RecyclerView) rootView.findViewById(R.id.headline_rv);
         rv.setLayoutManager(new LinearLayoutManager(getSelfActivity(), LinearLayout.VERTICAL, false));
         rv.setItemAnimator(new DefaultItemAnimator());
 
         tv = (TextView) rootView.findViewById(R.id.headline_error);
+
+        initData();
     }
 
     @Override
     public void initData() {
-        Log.d("sqqq","initData");
+        Log.d("sqqq", "initData");
         headlineItemsitems = new ArrayList<>();
         slideviewItemsitems = new ArrayList<>();
         views = new ArrayList<>();
 
-        lv = new LoadingView(getSelfActivity());
-        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));
-
+        /*lv = new LoadingView(getSelfActivity());
+        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
+        loadIngTextview();
         addSubscription(hPresenter.loadItemData(true, headlineItemsitems, slideviewItemsitems));
-        lv.setLoadExitListener(new LoadingView.LoadExit() {
+       /* lv.setLoadExitListener(new LoadingView.LoadExit() {
             @Override
             public void exit() {
                 hPresenter.unsubscribe();
             }
-        });
+        });*/
     }
 
     @Override
     public void initViews() {
         //加载完数据
-        lv.dismissDialog();
+        //lv.dismissDialog();
+        loadTextviewEnd();
 
         hPresenter.initSlideView(slideviewItemsitems, getSelfActivity(), views);
         adapter = new BaseAdapter() {
@@ -160,12 +162,15 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
     public void intentTo(String title,String url) {
         Bundle bd= new Bundle();
         bd.putString(BaseFragment.bundleURL,url);
-        bd.putString(BaseFragment.bundleTITLE,title);
+        bd.putString(BaseFragment.bundleTITLE, title);
         goToWithInfo(HeadlineActivity.class, bd);
     }
 
     @Override
     public void getDataError(String info) {
+        tv.setTextColor(getResources().getColor(R.color.red));
+        tv.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        tv.setText(R.string.network_error);
         tv.setVisibility(View.VISIBLE);
 
         /*tv.setText(info);*/
@@ -181,6 +186,17 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
     }
 
+
+    private void loadIngTextview(){
+        tv.setTextColor(getResources().getColor(R.color.colorWhite));
+        tv.setBackgroundColor(getResources().getColor(R.color.colorGray));
+        tv.setText(R.string.lv_tip);
+        tv.setVisibility(View.VISIBLE);
+    }
+
+    private void loadTextviewEnd(){
+        tv.setVisibility(View.GONE);
+    }
     ///////////////以下都是轮播图相关的代码
     private class MyViewPageAdapter extends PagerAdapter{
         public MyViewPageAdapter(){

@@ -43,7 +43,7 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
 
     RecyclerView rv;
     TextView tv;
-    LoadingView lv;
+    //LoadingView lv;
 
     BaseAdapter adapter;
     VideoPresenter vp;
@@ -57,8 +57,7 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         vp = new VideoPresenter(this);
-        initData();
-
+        
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_video,container,false);
 
         tv = (TextView) rootView.findViewById(R.id.video_error);
@@ -66,27 +65,31 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
         rv = (RecyclerView) rootView.findViewById(R.id.video_rv);
         rv.setLayoutManager(new GridLayoutManager(getSelfActivity(), 2));
         rv.setItemAnimator(new DefaultItemAnimator());
+
+        initData();
     }
 
     @Override
     public void initData() {
         videoitem_list = new ArrayList<>();
-        lv = new LoadingView(getSelfActivity());
-        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));
+        /*lv = new LoadingView(getSelfActivity());
+        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
 
+        loadIngTextview();
         addSubscription(vp.loadItemData(true, videoitem_list));
 
-        lv.setLoadExitListener(new LoadingView.LoadExit() {
+        /*lv.setLoadExitListener(new LoadingView.LoadExit() {
             @Override
             public void exit() {
                 vp.unsubscribe();
             }
-        });
+        });*/
     }
 
     @Override
     public void initViews() {
-        lv.dismissDialog();
+        //lv.dismissDialog();
+        loadTextviewEnd();
         adapter = new BaseAdapter() {
 
             @Override
@@ -135,6 +138,9 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
 
     @Override
     public void getDataError(String info) {
+        tv.setTextColor(getResources().getColor(R.color.red));
+        tv.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        tv.setText(R.string.network_error);
         tv.setVisibility(View.VISIBLE);
     }
 
@@ -146,5 +152,15 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
     @Override
     public void refresh(boolean isRefreshing) {
 
+    }
+    private void loadIngTextview(){
+        tv.setTextColor(getResources().getColor(R.color.colorWhite));
+        tv.setBackgroundColor(getResources().getColor(R.color.colorGray));
+        tv.setText(R.string.lv_tip);
+        tv.setVisibility(View.VISIBLE);
+    }
+
+    private void loadTextviewEnd(){
+        tv.setVisibility(View.GONE);
     }
 }

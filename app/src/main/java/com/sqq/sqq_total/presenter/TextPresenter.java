@@ -62,7 +62,7 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
 
         s = App.getRetrofitInstance().getApiService()
                 .getLatestTextItemInfo(AppConfig.textItemCount)
-                .map(new Func1<List<TextItem>, List<TextItem>>() {
+                /*.map(new Func1<List<TextItem>, List<TextItem>>() {
                     @Override
                     public List<TextItem> call(List<TextItem> textItems) {
                         try {
@@ -72,7 +72,7 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
                         }
                         return textItems;
                     }
-                })
+                })*/
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<TextItem>>() {

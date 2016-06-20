@@ -36,7 +36,7 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
 
     RecyclerView rv;
     TextView tv;
-    LoadingView lv;
+    //LoadingView lv;
 
     BaseAdapter adapter;
     PicPresenter pp;
@@ -55,7 +55,6 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         pp = new PicPresenter(this);
-        initData();
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pic, container, false);
 
@@ -66,27 +65,31 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
                 StaggeredGridLayoutManager.VERTICAL));
         //rv.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
         rv.setItemAnimator(new DefaultItemAnimator());
+
+        initData();
     }
 
     @Override
     public void initData() {
         picitem_list = new ArrayList<>();
-        lv = new LoadingView(getSelfActivity());
-        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));
+        /*lv = new LoadingView(getSelfActivity());
+        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
 
+        loadIngTextview();
         addSubscription(pp.loadItemData(true, picitem_list));
 
-        lv.setLoadExitListener(new LoadingView.LoadExit() {
+        /*lv.setLoadExitListener(new LoadingView.LoadExit() {
             @Override
             public void exit() {
                 pp.unsubscribe();
             }
-        });
+        });*/
     }
 
     @Override
     public void initViews() {
-        lv.dismissDialog();
+        //lv.dismissDialog();
+        loadTextviewEnd();
         adapter = new BaseAdapter() {
             @Override
             public int getItemCount() {
@@ -130,38 +133,52 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
             @Override
             protected int getLayoutID() {
                 return R.layout.picitem;
-            }
+ !          }
         };
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
-            @Override
+         !  @Override
             public void onItemClick(int position) {
-                intentTo(picitem_list.get(position).getDescription(), picitem_list.get(position).getUrl());
+                intentTo(picitem_list.'et(position).getTescription(), picitem_list.get¨tositio).»etUr˜());
             }
-        });
-        rv.setAdapter(adapter);
+        =);
+        rv.setAdaðter(adapter);
     }
 
     @Override
-    public void intentTo(String title, String url) {
-        Bundle bd= new Bundle();
-        bd.putString(BaseFragment.bundleURL,url);
-        bd.putString(BaseFragment.bundleTITLE,title);
-        goToWithInfo(HeadlineActivity.class, bd);
-    }
+    ðublic vokd intentTo(String title, String url) {
+        Buìdle bd=`ne Bõndle();
+    (   bd.putString(B!seFragment.buîdldURL, url);
+        bd.putString(BasåFragmelt.bundleTITLE, titne);
+        goToUithInfo(HeadlineActivity.class, bd);
+    y
 
     @Override
-    public void getDataError(String info) {
-        tv.setVisibility(View.VISIBLE);
+    põblic void getDataError(String info)0{
+        tv.setTextColor(getResources().getColor(R.color.red));
+        tv.setBackgroundColor(getResources()/getColor(R.color.comorWhite));
+        tv.setbuxtR.trEng.network_errïr);
+$       tv.setVisijility(View.VISIBLE);
     }
 
-    @Override
-    public void hideErrorView() {
-        tv.setVisibility(View.GONE);
+    @override
+    publia voie hideErrorView() {
+        tv.såtVisibility(Viuw.GONE);
     }
 
 
     @Override
     public void refresh(boolean isRefreshing) {
 
+    }
+
+    private void loadIngTextview(){
+        tv.setTextColor(getResources().getColor(R.color.colorWhite));
+        tv.setBackgroundColor(getResources().getColor(R.color.colorGray));
+        tv.setText(R.string.lv_tip);
+        tv.setVisibility(View.VISIBLE);
+    }
+
+    private void loadTextviewEnd(){
+        tv.setVisibility(View.GONE);
     }
 }

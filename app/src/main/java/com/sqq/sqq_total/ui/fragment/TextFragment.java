@@ -36,7 +36,7 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
 
     RecyclerView rv;
     TextView tv;
-    LoadingView lv;
+    //LoadingView lv;
 
     BaseAdapter adapter;
     TextPresenter tp;
@@ -53,7 +53,6 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         tp = new TextPresenter(this);
-        initData();
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_text,container,false);
         tv = (TextView) rootView.findViewById(R.id.text_error);
@@ -61,28 +60,32 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
         rv = (RecyclerView) rootView.findViewById(R.id.text_rv);
         rv.setLayoutManager(new LinearLayoutManager(getSelfActivity(), LinearLayout.VERTICAL, false));
         rv.setItemAnimator(new DefaultItemAnimator());
+
+        initData();
     }
 
     @Override
     public void initData() {
         list_textitem = new ArrayList<>();
 
-        lv = new LoadingView(getSelfActivity());
-        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));
+        /*lv = new LoadingView(getSelfActivity());
+        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
 
+        loadIngTextview();
         addSubscription(tp.loadItemData(true, list_textitem));
 
-        lv.setLoadExitListener(new LoadingView.LoadExit() {
+        /*lv.setLoadExitListener(new LoadingView.LoadExit() {
             @Override
             public void exit() {
                 tp.unsubscribe();
             }
-        });
+        });*/
     }
 
     @Override
     public void initViews() {
-        lv.dismissDialog();
+        //lv.dismissDialog();
+        loadTextviewEnd();
         adapter = new BaseAdapter() {
 
             @Override
@@ -127,6 +130,9 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
 
     @Override
     public void getDataError(String info) {
+        tv.setTextColor(getResources().getColor(R.color.red));
+        tv.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        tv.setText(R.string.network_error);
         tv.setVisibility(View.VISIBLE);
     }
 
@@ -138,5 +144,16 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
     @Override
     public void refresh(boolean isRefreshing) {
 
+    }
+
+    private void loadIngTextview(){
+        tv.setTextColor(getResources().getColor(R.color.colorWhite));
+        tv.setBackgroundColor(getResources().getColor(R.color.colorGray));
+        tv.setText(R.string.lv_tip);
+        tv.setVisibility(View.VISIBLE);
+    }
+
+    private void loadTextviewEnd(){
+        tv.setVisibility(View.GONE);
     }
 }
