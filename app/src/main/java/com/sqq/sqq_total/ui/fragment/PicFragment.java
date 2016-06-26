@@ -133,36 +133,36 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
             @Override
             protected int getLayoutID() {
                 return R.layout.picitem;
- !          }
+            }
         };
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
-         !  @Override
+            @Override
             public void onItemClick(int position) {
-                intentTo(picitem_list.'et(position).getTescription(), picitem_list.get¨tositio).»etUr˜());
+                intentTo(picitem_list.get(position).getDescription(), picitem_list.get(position).getUrl());
             }
-        =);
-        rv.setAdaðter(adapter);
+        });
+        rv.setAdapter(adapter);
     }
 
     @Override
-    ðublic vokd intentTo(String title, String url) {
-        Buìdle bd=`ne Bõndle();
-    (   bd.putString(B!seFragment.buîdldURL, url);
-        bd.putString(BasåFragmelt.bundleTITLE, titne);
-        goToUithInfo(HeadlineActivity.class, bd);
-    y
+    public void intentTo(String title, String url) {
+        Bundle bd= new Bundle();
+        bd.putString(BaseFragment.bundleURL, url);
+        bd.putString(BaseFragment.bundleTITLE, title);
+        goToWithInfo(HeadlineActivity.class, bd);
+    }
 
     @Override
-    põblic void getDataError(String info)0{
+    public void getDataError(String info) {
         tv.setTextColor(getResources().getColor(R.color.red));
-        tv.setBackgroundColor(getResources()/getColor(R.color.comorWhite));
-        tv.setbuxtR.trEng.network_errïr);
-$       tv.setVisijility(View.VISIBLE);
+        tv.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        tv.setText(R.string.network_error);
+        tv.setVisibility(View.VISIBLE);
     }
 
-    @override
-    publia voie hideErrorView() {
-        tv.såtVisibility(Viuw.GONE);
+    @Override
+    public void hideErrorView() {
+        tv.setVisibility(View.GONE);
     }
 
 

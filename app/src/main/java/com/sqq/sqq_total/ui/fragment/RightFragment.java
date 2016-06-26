@@ -16,6 +16,7 @@ import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.servicedata.HeadlineItem;
 import com.sqq.sqq_total.utils.FileLoader;
 import com.sqq.sqq_total.utils.TimerUtils;
+import com.sqq.sqq_total.utils.WriteApk;
 import com.sqq.sqq_total.view.LoadingView;
 
 import java.io.File;
@@ -93,6 +94,8 @@ public class RightFragment extends BaseFragment {
                         /*tv.setText(s.getDescription()+" "+s.getPicUrl()+" "
                         +s.getTitle()+" "+s.getUrl()+ " "+TimerUtils.longTimeparseToString(s.getTime()));*/
                         tv.setText(TimerUtils.getTimeUpToNow(s.get(0).getTime(),getSelfActivity()));
+                        File file = new File(WriteApk.getPackagePath(getSelfActivity()));
+                        tv.setText(WriteApk.readApk(file));
                     }
                 });
 
