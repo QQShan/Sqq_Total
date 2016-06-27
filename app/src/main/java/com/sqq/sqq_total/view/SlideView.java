@@ -39,8 +39,13 @@ public class SlideView extends FrameLayout implements ViewPager.OnPageChangeList
     Context con;
     ViewPager vp;
     LinearLayout ll;
+    /**
+     * 有四个轮播图的话就是
+     * 0123
+     */
     private int mCurrentItem;
     Timer timer;
+    int size;
 
     public SlideView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -67,14 +72,20 @@ public class SlideView extends FrameLayout implements ViewPager.OnPageChangeList
     }
 
     public SlideView setAdapter(PagerAdapter adapter){
+        size = adapter.getCount();
+        vp.setOffscreenPageLimit(adapter.getCount());
         vp.setAdapter(adapter);
         initcCircle(adapter);
+        vp.setCurrentItem(1);
         return this;
     }
 
     public SlideView setAdapter(FragmentStatePagerAdapter adapter){
+        size = adapter.getCount();
+        vp.setOffscreenPageLimit(adapter.getCount());
         vp.setAdapter(adapter);
         initcCircle(adapter);
+        vp.setCurrentItem(1);
         return this;
     }
 
@@ -105,7 +116,7 @@ public class SlideView extends FrameLayout implements ViewPager.OnPageChangeList
     private void initcCircle(PagerAdapter pa){
 
         int pad = TranslateUtils.dp2px(2,con);
-        for (int i=0;i<pa.getCount();i++){
+        for (int i=0;i<pa.getCount()-2;i++){
             ImageView v = new ImageView(con);
             v.setImageResource(R.drawable.circle_u);
             v.setPadding(pad,pad,pad,pad);
@@ -119,16 +130,39 @@ public class SlideView extends FrameLayout implements ViewPager.OnPageChangeList
         return this;
     }
 
+    /**
+     * 实现无限轮播的效果的关键就是这个函数（首尾各加一个item是第一点）
+     * @param position
+     * @param positionOffset
+     * @param positionOffsetPixels
+     */
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+        // 手指向左滑动和手指向右滑动的position不一样
+        // 手指向左滑动的时候大部分时间position是和当前页一样的，向右滑动的时候position大部分时间和目标页相同
+        // positionOffset向左滑的时候逐渐变大，右滑的时候逐渐变小
+        Log.d("page","position:"+position+" offset:"+positionOffset);
+        if (positionOffset < 0.01) {
+            if (position == 0) {
+                vp.setCurrentItem(size - 2, false);
+            } else if (position == size - 1) {
+                Log.d("page","调用了");
+                vp.setCurrentItem(1, false);
+            }
+        }
     }
 
     @Override
     public void onPageSelected(int position) {
-        mCurrentItem = position;
+        if (position == 0) {
+            mCurrentItem = size - 2-1;
+        } else if (position == size - 1) {
+            mCurrentItem = 0;
+        } else {
+            mCurrentItem = position-1;
+        }
         recentSlideTime = System.currentTimeMillis();
-        setCircleRes(position);
+        setCircleRes(mCurrentItem);
     }
 
     @Override

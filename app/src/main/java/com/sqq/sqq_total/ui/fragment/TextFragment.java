@@ -70,7 +70,8 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
 
         /*lv = new LoadingView(getSelfActivity());
         lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
-
+        adapter = null;
+        rv.setAdapter(adapter);
         loadIngTextview();
         addSubscription(tp.loadItemData(true, list_textitem));
 

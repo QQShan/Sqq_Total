@@ -22,7 +22,6 @@ import com.sqq.sqq_total.servicedata.HeadlineItem;
 import com.sqq.sqq_total.servicedata.SlideviewItem;
 import com.sqq.sqq_total.ui.activity.HeadlineActivity;
 import com.sqq.sqq_total.utils.TimerUtils;
-import com.sqq.sqq_total.view.LoadingView;
 import com.sqq.sqq_total.view.SlideView;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
 import java.util.ArrayList;
@@ -79,7 +78,8 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
         headlineItemsitems = new ArrayList<>();
         slideviewItemsitems = new ArrayList<>();
         views = new ArrayList<>();
-
+        adapter = null;
+        rv.setAdapter(adapter);
         /*lv = new LoadingView(getSelfActivity());
         lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
         loadIngTextview();
@@ -103,7 +103,7 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
             @Override
             public int getItemCount() {
-                //加以是因为还有轮播图
+                //加1是因为还有轮播图
                 return headlineItemsitems.size()+1;
             }
 

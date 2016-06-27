@@ -93,7 +93,7 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
                                 return null;
                             }
                         })
-                .map(new Func1<Void, Void>() {
+                /*.map(new Func1<Void, Void>() {
                     @Override
                     public Void call(Void aVoid) {
                         try {
@@ -103,7 +103,7 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
                         }
                         return null;
                     }
-                })
+                })*/
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Void>() {
@@ -131,23 +131,39 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
     }
 
     public void initSlideView(final List<SlideviewItem> sItems ,Context context,List<View> lv){
-        for(int i=0;i<sItems.size();i++) {
-            final int s =i;
+        for(int i=0;i<sItems.size()+2;i++) {
+            final int s =i-1;
             ViewGroup v = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.slideviewitem, null);
             v.setClickable(true);
+            if(s==-1 || s == sItems.size()){
+                //首尾各一条
+                if(s==-1){
+                    ImageView img = (ImageView) v.findViewById(R.id.img);
+                    img.setImageResource(resId[sItems.size()-1]);
+
+                    TextView tv = (TextView) v.findViewById(R.id.tv);
+                    tv.setText(sItems.get(sItems.size()-1).getTitle());
+                }else{
+                    ImageView img = (ImageView) v.findViewById(R.id.img);
+                    img.setImageResource(resId[0]);
+
+                    TextView tv = (TextView) v.findViewById(R.id.tv);
+                    tv.setText(sItems.get(0).getTitle());
+                }
+            }else{
+                ImageView img = (ImageView) v.findViewById(R.id.img);
+                img.setImageResource(resId[s]);
+
+                TextView tv = (TextView) v.findViewById(R.id.tv);
+                tv.setText(sItems.get(s).getTitle());
+            }
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Log.d("sqqq","pos"+s+"url:"+sItems.get(s).getUrl());
+                    Log.d("sqqq","pos"+s+"url:"+sItems.get(s).getUrl());
                     view.intentTo(sItems.get(s).getTitle(),sItems.get(s).getUrl());
                 }
             });
-
-            ImageView img = (ImageView) v.findViewById(R.id.img);
-            img.setImageResource(resId[s]);
-
-            TextView tv = (TextView) v.findViewById(R.id.tv);
-            tv.setText(sItems.get(s).getTitle());
             lv.add(v);
         }
     }

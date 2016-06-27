@@ -74,6 +74,8 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
         videoitem_list = new ArrayList<>();
         /*lv = new LoadingView(getSelfActivity());
         lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
+        adapter = null;
+        rv.setAdapter(adapter);
 
         loadIngTextview();
         addSubscription(vp.loadItemData(true, videoitem_list));

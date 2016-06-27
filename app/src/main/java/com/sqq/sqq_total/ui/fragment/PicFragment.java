@@ -74,6 +74,8 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
         picitem_list = new ArrayList<>();
         /*lv = new LoadingView(getSelfActivity());
         lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
+        adapter = null;
+        rv.setAdapter(adapter);
 
         loadIngTextview();
         addSubscription(pp.loadItemData(true, picitem_list));
