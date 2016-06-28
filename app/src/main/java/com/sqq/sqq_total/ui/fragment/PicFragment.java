@@ -40,7 +40,7 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
 
     BaseAdapter adapter;
     PicPresenter pp;
-    List<PicItem> picitem_list;
+
 
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
@@ -71,14 +71,14 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
 
     @Override
     public void initData() {
-        picitem_list = new ArrayList<>();
+
         /*lv = new LoadingView(getSelfActivity());
         lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
         adapter = null;
         rv.setAdapter(adapter);
 
         loadIngTextview();
-        addSubscription(pp.loadItemData(true, picitem_list));
+        addSubscription(pp.loadItemData(true));
 
         /*lv.setLoadExitListener(new LoadingView.LoadExit() {
             @Override
@@ -89,7 +89,7 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
     }
 
     @Override
-    public void initViews() {
+    public void initViews(final List<PicItem> picitem_list) {
         //lv.dismissDialog();
         loadTextviewEnd();
         adapter = new BaseAdapter() {

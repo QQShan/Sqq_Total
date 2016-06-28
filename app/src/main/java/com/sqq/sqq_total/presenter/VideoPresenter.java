@@ -10,6 +10,7 @@ import com.sqq.sqq_total.servicedata.VideoItem;
 import com.sqq.sqq_total.utils.NetWorkUtil;
 import com.sqq.sqq_total.view.LoadingView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
@@ -37,7 +38,7 @@ public class VideoPresenter implements NetWorkUtil.NetworkListener {
     }
     public interface VideoFmView{
         public void initData();
-        public void initViews();
+        public void initViews(List<VideoItem> videoitem_list);
         public void intentTo(String title,String url);
         public void getDataError(String info);
         public void hideErrorView();
@@ -46,19 +47,20 @@ public class VideoPresenter implements NetWorkUtil.NetworkListener {
 
     VideoFmView vfv;
     Subscription s;
+    List<VideoItem> videoitem_list;
 
     public VideoPresenter(VideoFmView vfv){
         this.vfv = vfv;
+        videoitem_list = new ArrayList<>();
         NetWorkUtil.getInstance().addNetWorkListener(this);
     }
 
     /**
      * 如果清理会重新加载adapter
      * @param ifClear
-     * @param list
      * @return
      */
-    public Subscription loadItemData(final boolean ifClear,final List<VideoItem> list){
+    public Subscription loadItemData(final boolean ifClear){
 
         s = App.getRetrofitInstance().getApiService()
                 .getLatestVideoItemInfo(AppConfig.videoItemCount)
@@ -78,11 +80,10 @@ public class VideoPresenter implements NetWorkUtil.NetworkListener {
                     @Override
                     public void onNext(List<VideoItem> textItems) {
                         if(ifClear){
-                            list.clear();
-                            vfv.initViews();
+                            videoitem_list.clear();
                         }
-                        list.addAll(textItems);
-
+                        videoitem_list.addAll(textItems);
+                        vfv.initViews(videoitem_list);
                     }
                 });
         return s;

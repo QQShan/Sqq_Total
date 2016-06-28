@@ -40,7 +40,6 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
 
     BaseAdapter adapter;
     TextPresenter tp;
-    List<TextItem> list_textitem;
 
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
@@ -66,14 +65,12 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
 
     @Override
     public void initData() {
-        list_textitem = new ArrayList<>();
 
         /*lv = new LoadingView(getSelfActivity());
         lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
-        adapter = null;
-        rv.setAdapter(adapter);
+
         loadIngTextview();
-        addSubscription(tp.loadItemData(true, list_textitem));
+        addSubscription(tp.loadItemData(true));
 
         /*lv.setLoadExitListener(new LoadingView.LoadExit() {
             @Override
@@ -84,7 +81,7 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
     }
 
     @Override
-    public void initViews() {
+    public void initViews(final List<TextItem> list_textitem) {
         //lv.dismissDialog();
         loadTextviewEnd();
         adapter = new BaseAdapter() {

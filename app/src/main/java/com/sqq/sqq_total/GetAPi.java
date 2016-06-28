@@ -31,7 +31,7 @@ public interface GetAPi {
      * @param count
      * @return
      */
-    @Headers("Cache-Control:max-age=640000")
+    @Headers("Cache-Control:max-age=60")
     @GET("headlineitem.php")
     Observable<List<HeadlineItem>> getLatestItemInfo(@Query("count") int count);
 
@@ -49,18 +49,18 @@ public interface GetAPi {
      * @param count
      * @return
      */
-    @Headers("Cache-Control:max-age=640000")
+    @Headers("Cache-Control:max-age=60")
     @GET("slideviewitem.php")
     Observable<List<SlideviewItem>> getLatestSlideviewInfo(@Query("count") int count);
 
-    /**
+/*    *//**
      * 取小于这个id的count条数据，用于加载更多
      * @param count
      * @param id
      * @return
-     */
+     *//*
     @GET("slideviewitem.php")
-    Observable<List<SlideviewItem>> getSlideviewInfo(@Query("count") int count,@Query("id") int id);
+    Observable<List<SlideviewItem>> getSlideviewInfo(@Query("count") int count,@Query("id") int id);*/
 
 ///////////////////textitem///////////////////
     /**

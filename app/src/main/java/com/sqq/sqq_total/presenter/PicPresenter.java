@@ -9,6 +9,7 @@ import com.sqq.sqq_total.servicedata.PicItem;
 import com.sqq.sqq_total.utils.NetWorkUtil;
 import com.sqq.sqq_total.view.LoadingView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
@@ -36,7 +37,7 @@ public class PicPresenter implements NetWorkUtil.NetworkListener {
     }
     public interface PicFmView{
         public void initData();
-        public void initViews();
+        public void initViews(List<PicItem> list);
         public void intentTo(String title,String url);
         public void getDataError(String info);
         public void hideErrorView();
@@ -46,19 +47,20 @@ public class PicPresenter implements NetWorkUtil.NetworkListener {
     PicFmView pfv;
 
     Subscription s;
+    List<PicItem> picitem_list;
 
     public PicPresenter(PicFmView pfv){
         this.pfv = pfv;
+        picitem_list = new ArrayList<>();
         NetWorkUtil.getInstance().addNetWorkListener(this);
     }
 
     /**
      * 如果清理会重新加载adapter
      * @param ifClear
-     * @param list
      * @return
      */
-    public Subscription loadItemData(final boolean ifClear,final List<PicItem> list){
+    public Subscription loadItemData(final boolean ifClear){
 
         s = App.getRetrofitInstance().getApiService()
                 .getLatestPicItemInfo(AppConfig.picItemCount)
@@ -78,10 +80,10 @@ public class PicPresenter implements NetWorkUtil.NetworkListener {
                     @Override
                     public void onNext(List<PicItem> picItems) {
                         if(ifClear){
-                            list.clear();
-                            pfv.initViews();
+                            picitem_list.clear();
                         }
-                        list.addAll(picItems);
+                        picitem_list.addAll(picItems);
+                        pfv.initViews(picitem_list);
                     }
                 });
         return s;

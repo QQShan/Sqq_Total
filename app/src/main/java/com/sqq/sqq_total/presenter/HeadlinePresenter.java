@@ -14,6 +14,8 @@ import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.servicedata.HeadlineItem;
 import com.sqq.sqq_total.servicedata.SlideviewItem;
 import com.sqq.sqq_total.utils.NetWorkUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
@@ -44,7 +46,7 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
 
     public interface HeadlineView{
         public void initData();
-        public void initViews();
+        public void initViews(List<HeadlineItem> headlineItemsitems,List<SlideviewItem> slideviewItemsitems);
         public void intentTo(String title,String url);
         public void getDataError(String info);
         public void hideErrorView();
@@ -59,8 +61,16 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
     Subscription s;
     public HeadlineView view;
 
+    List<HeadlineItem> headlineItemsitems;
+    List<SlideviewItem> slideviewItemsitems;
+
+
     public HeadlinePresenter(HeadlineView view){
         this.view = view;
+
+        headlineItemsitems = new ArrayList<>();
+        slideviewItemsitems = new ArrayList<>();
+
         NetWorkUtil.getInstance().addNetWorkListener(this);
     }
 
@@ -68,12 +78,9 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
      * 如果清理会重新加载adapter
      * 加载轮播图在内的数据
      * @param ifClear
-     * @param hItems
-     * @param sItems
      * @return
      */
-    public Subscription loadItemData(final boolean ifClear,final List<HeadlineItem> hItems,
-                                     final List<SlideviewItem> sItems){
+    public Subscription loadItemData(final boolean ifClear){
 
         s = Observable
                 .zip(App.getRetrofitInstance().getApiService()
@@ -84,12 +91,13 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
                             @Override
                             public Void call(List<HeadlineItem> headlineItems, List<SlideviewItem> slideviewItems) {
                                 if (ifClear) {
-                                    hItems.clear();
-                                    sItems.clear();
+                                    Log.d("sqqq",headlineItemsitems.size()+"");
+                                    headlineItemsitems.clear();
+                                    slideviewItemsitems.clear();
                                 }
 
-                                hItems.addAll(headlineItems);
-                                sItems.addAll(slideviewItems);
+                                headlineItemsitems.addAll(headlineItems);
+                                slideviewItemsitems.addAll(slideviewItems);
                                 return null;
                             }
                         })
@@ -122,7 +130,7 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
                     @Override
                     public void onNext(Void s) {
                         if(ifClear){
-                            view.initViews();
+                            view.initViews(headlineItemsitems,slideviewItemsitems);
                         }
 
                     }
@@ -130,42 +138,44 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
         return s;
     }
 
-    public void initSlideView(final List<SlideviewItem> sItems ,Context context,List<View> lv){
-        for(int i=0;i<sItems.size()+2;i++) {
+    public List<View> initSlideView(Context context){
+        List<View> lv = new ArrayList<>();
+        for(int i=0;i<slideviewItemsitems.size()+2;i++) {
             final int s =i-1;
             ViewGroup v = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.slideviewitem, null);
             v.setClickable(true);
-            if(s==-1 || s == sItems.size()){
-                //首尾各一条
+            if(s==-1 || s == slideviewItemsitems.size()){
+                //首尾各一条,为了无限滑动的效果
                 if(s==-1){
                     ImageView img = (ImageView) v.findViewById(R.id.img);
-                    img.setImageResource(resId[sItems.size()-1]);
+                    img.setImageResource(resId[slideviewItemsitems.size()-1]);
 
                     TextView tv = (TextView) v.findViewById(R.id.tv);
-                    tv.setText(sItems.get(sItems.size()-1).getTitle());
+                    tv.setText(slideviewItemsitems.get(slideviewItemsitems.size()-1).getTitle());
                 }else{
                     ImageView img = (ImageView) v.findViewById(R.id.img);
                     img.setImageResource(resId[0]);
 
                     TextView tv = (TextView) v.findViewById(R.id.tv);
-                    tv.setText(sItems.get(0).getTitle());
+                    tv.setText(slideviewItemsitems.get(0).getTitle());
                 }
             }else{
                 ImageView img = (ImageView) v.findViewById(R.id.img);
                 img.setImageResource(resId[s]);
 
                 TextView tv = (TextView) v.findViewById(R.id.tv);
-                tv.setText(sItems.get(s).getTitle());
+                tv.setText(slideviewItemsitems.get(s).getTitle());
             }
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("sqqq","pos"+s+"url:"+sItems.get(s).getUrl());
-                    view.intentTo(sItems.get(s).getTitle(),sItems.get(s).getUrl());
+                    Log.d("sqqq","pos"+s+"url:"+slideviewItemsitems.get(s).getUrl());
+                    view.intentTo(slideviewItemsitems.get(s).getTitle(),slideviewItemsitems.get(s).getUrl());
                 }
             });
             lv.add(v);
         }
+        return lv;
     }
     public void unsubscribe(){
         if(!s.isUnsubscribed())

@@ -3,6 +3,7 @@ package com.sqq.sqq_total.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import com.sqq.sqq_total.servicedata.HeadlineItem;
 import com.sqq.sqq_total.servicedata.SlideviewItem;
 import com.sqq.sqq_total.ui.activity.HeadlineActivity;
 import com.sqq.sqq_total.utils.TimerUtils;
+import com.sqq.sqq_total.utils.TranslateUtils;
 import com.sqq.sqq_total.view.SlideView;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
     //ViewPager vp;
     RecyclerView rv;
+    SwipeRefreshLayout swipeRefreshLayout;
     TextView tv;
     BaseAdapter adapter;
     SlideView sv;
@@ -42,9 +45,10 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
     static int mCurSlideView = 0;
     private PagerAdapter mPagerAdapter;
     HeadlinePresenter hPresenter;
-    List<HeadlineItem> headlineItemsitems;
-    List<SlideviewItem> slideviewItemsitems;
-    List<View> views;
+    List<View> viewpagerViews;
+
+    private static final int[] DEFAULT_COLOR_RES = new int[]{R.color.black, R.color.black,
+            R.color.black, R.color.black};
 
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
@@ -63,6 +67,18 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
         //在这里发现一个问题，每次即使从磁盘缓存中读取内容依旧很慢,解决办法viewpager多缓存几页
         hPresenter = new HeadlinePresenter(this);
 
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.sf);
+        swipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
+        swipeRefreshLayout.setColorSchemeColors(DEFAULT_COLOR_RES);
+        int start = getSelfActivity().getResources().getDimensionPixelSize(R.dimen.title_height);
+        swipeRefreshLayout.setProgressViewOffset(false,start,100);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                hPresenter.loadItemData(true);
+            }
+        });
+
         rv = (RecyclerView) rootView.findViewById(R.id.headline_rv);
         rv.setLayoutManager(new LinearLayoutManager(getSelfActivity(), LinearLayout.VERTICAL, false));
         rv.setItemAnimator(new DefaultItemAnimator());
@@ -75,15 +91,13 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
     @Override
     public void initData() {
         Log.d("sqqq", "initData");
-        headlineItemsitems = new ArrayList<>();
-        slideviewItemsitems = new ArrayList<>();
-        views = new ArrayList<>();
-        adapter = null;
-        rv.setAdapter(adapter);
+
+        viewpagerViews = new ArrayList<>();
+
         /*lv = new LoadingView(getSelfActivity());
         lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
         loadIngTextview();
-        addSubscription(hPresenter.loadItemData(true, headlineItemsitems, slideviewItemsitems));
+        addSubscription(hPresenter.loadItemData(true));
        /* lv.setLoadExitListener(new LoadingView.LoadExit() {
             @Override
             public void exit() {
@@ -93,12 +107,12 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
     }
 
     @Override
-    public void initViews() {
+    public void initViews(final List<HeadlineItem> headlineItemsitems,List<SlideviewItem> slideviewItemsitems) {
         //加载完数据
         //lv.dismissDialog();
         loadTextviewEnd();
 
-        hPresenter.initSlideView(slideviewItemsitems, getSelfActivity(), views);
+        viewpagerViews = hPresenter.initSlideView(getSelfActivity());
         adapter = new BaseAdapter() {
 
             @Override
@@ -111,9 +125,10 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
             protected void onBindView(BaseViewHolder holder, int position) {
                 if(position==0) {
                     sv = holder.getView(R.id.headline_viewpager);
-                    if (sv.getAdapter()==null)
+                    if (sv.getAdapter()==null) {
                         mPagerAdapter = new MyViewPageAdapter();
-                    sv.setAdapter(mPagerAdapter).startPlay();
+                        sv.setAdapter(mPagerAdapter).startPlay();
+                    }
                 }else{
                     final TextView hl_title = holder.getView(R.id.hl_title);
                     hl_title.setText(headlineItemsitems.get(position-1).getTitle());
@@ -124,6 +139,9 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
                     //图片加载的话先放一放
                     ImageView im = holder.getView(R.id.hl_pic);
+                    if(position>14){
+                        position=1;
+                    }
                     im.setImageResource(resId[position-1]);
                 }
             }
@@ -183,7 +201,7 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
     @Override
     public void refresh(boolean isRefreshing) {
-
+        swipeRefreshLayout.setRefreshing(isRefreshing);
     }
 
 
@@ -197,6 +215,7 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
     private void loadTextviewEnd(){
         tv.setVisibility(View.GONE);
     }
+
     ///////////////以下都是轮播图相关的代码
     private class MyViewPageAdapter extends PagerAdapter{
         public MyViewPageAdapter(){
@@ -204,7 +223,7 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
         @Override
         public int getCount() {
-            return views.size();
+            return viewpagerViews.size();
         }
 
         @Override
@@ -214,12 +233,12 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(views.get(position));
+            container.removeView(viewpagerViews.get(position));
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            View v = views.get(position);
+            View v = viewpagerViews.get(position);
             container.addView(v,0);
             return v;
         }

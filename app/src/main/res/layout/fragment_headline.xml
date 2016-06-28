@@ -21,9 +21,13 @@
         android:textSize="30sp"
         tools:text="文字"
         android:visibility="gone"/>
-
-    <android.support.v7.widget.RecyclerView
-        style="@style/recyclerview"
-        android:id="@+id/headline_rv"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/sf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <android.support.v7.widget.RecyclerView
+            style="@style/recyclerview"
+            android:id="@+id/headline_rv"
         ></android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

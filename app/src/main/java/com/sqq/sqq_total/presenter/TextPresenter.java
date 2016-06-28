@@ -9,6 +9,7 @@ import com.sqq.sqq_total.servicedata.TextItem;
 import com.sqq.sqq_total.utils.NetWorkUtil;
 import com.sqq.sqq_total.view.LoadingView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
@@ -37,7 +38,7 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
     }
     public interface TextFmView{
         public void initData();
-        public void initViews();
+        public void initViews(List<TextItem> list);
         public void intentTo(String title,String url);
         public void getDataError(String info);
         public void hideErrorView();
@@ -46,19 +47,21 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
 
     TextFmView tfv;
     Subscription s;
+    List<TextItem> list_textitem;
 
     public TextPresenter(TextFmView tfv){
         this.tfv = tfv;
+        list_textitem = new ArrayList<>();
+
         NetWorkUtil.getInstance().addNetWorkListener(this);
     }
 
     /**
      * 如果清理会重新加载adapter
      * @param ifClear
-     * @param list
      * @return
      */
-    public Subscription loadItemData(final boolean ifClear,final List<TextItem> list){
+    public Subscription loadItemData(final boolean ifClear){
 
         s = App.getRetrofitInstance().getApiService()
                 .getLatestTextItemInfo(AppConfig.textItemCount)
@@ -89,11 +92,10 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
                     @Override
                     public void onNext(List<TextItem> textItems) {
                         if(ifClear){
-                            list.clear();
-                            tfv.initViews();
+                            list_textitem.clear();
                         }
-                        list.addAll(textItems);
-
+                        list_textitem.addAll(textItems);
+                        tfv.initViews(list_textitem);
                     }
                 });
 
