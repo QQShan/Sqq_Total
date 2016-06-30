@@ -213,6 +213,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         sp.edit().remove(key).commit();
     }
+
     public static void removeItem(Context context, int resId) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);

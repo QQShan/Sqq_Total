@@ -47,8 +47,10 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
     HeadlinePresenter hPresenter;
     List<View> viewpagerViews;
 
-    private static final int[] DEFAULT_COLOR_RES = new int[]{R.color.black, R.color.black,
-            R.color.black, R.color.black};
+    private static final int[] DEFAULT_COLOR_RES = new int[]{android.R.color.holo_blue_light, android.R.color.holo_red_light,
+            android.R.color.holo_orange_light, android.R.color.holo_green_light};
+    /*private static final int[] DEFAULT_COLOR_RES = new int[]{R.color.black, R.color.black,
+            R.color.black, R.color.black};*/
 
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
@@ -69,9 +71,10 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.sf);
         swipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
-        swipeRefreshLayout.setColorSchemeColors(DEFAULT_COLOR_RES);
+        swipeRefreshLayout.setColorSchemeResources(DEFAULT_COLOR_RES);
         int start = getSelfActivity().getResources().getDimensionPixelSize(R.dimen.title_height);
         swipeRefreshLayout.setProgressViewOffset(false,start,100);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
