@@ -6,15 +6,16 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>-->
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-    </style>
+    </style>-->
 <!--Light文字都是黑色的 dark文字都是白色的-->
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
     </style>
-
+    <style name="AppTheme" parent="AppTheme.Base">
+    </style>
     <style name="SqqTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!--<item name="android:activityOpenEnterAnimation">@android:anim/slide_in_left</item>
         <item name="android:activityOpenExitAnimation">@android:anim/slide_out_right</item>

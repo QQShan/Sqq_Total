@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--为了兼容4.4-->
     <style name="AppTheme" parent="AppTheme.Base">
         <!--透明底部导航栏-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
