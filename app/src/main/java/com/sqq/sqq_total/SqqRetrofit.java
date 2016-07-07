@@ -115,7 +115,7 @@ public class SqqRetrofit {
                 //如果有网络
                 String cacheControl = request.cacheControl().toString();
                 Response response1 = response.newBuilder()
-                        //.header("Cache-Control", cacheControl)
+                        .header("Cache-Control", cacheControl)
                         .removeHeader("Pragma")//移除干扰信息
                         .build();
                 Log.d("sqqq","响应"+response1.headers().toString());
