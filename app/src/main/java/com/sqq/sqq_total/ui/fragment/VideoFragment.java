@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +31,8 @@ import com.sqq.sqq_total.utils.NumberUtils;
 import com.sqq.sqq_total.utils.TimerUtils;
 import com.sqq.sqq_total.view.LoadingView;
 import com.sqq.sqq_total.view.SlideView;
+import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
+import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
 
 import java.lang.ref.WeakReference;
@@ -41,7 +44,7 @@ import java.util.List;
  */
 public class VideoFragment extends BaseFragment implements VideoPresenter.VideoFmView{
 
-    RecyclerView rv;
+    SqqRecyclerview rv;
     TextView tv;
     //LoadingView lv;
 
@@ -55,21 +58,14 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
 
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        vp = new VideoPresenter(this);
-        
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_video,container,false);
+        vp = new VideoPresenter(this);
 
-        tv = (TextView) rootView.findViewById(R.id.video_error);
-
-        rv = (RecyclerView) rootView.findViewById(R.id.video_rv);
-        rv.setLayoutManager(new GridLayoutManager(getSelfActivity(), 2));
-        rv.setItemAnimator(new DefaultItemAnimator());
-
-        initData();
+        startGetData();
     }
 
     @Override
-    public void initData() {
+    public void startGetData() {
 
         /*lv = new LoadingView(getSelfActivity());
         lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
@@ -87,8 +83,25 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
 
     @Override
     public void initViews(final List<VideoItem> videoitem_list) {
-        //lv.dismissDialog();
-        loadTextviewEnd();
+        tv = (TextView) rootView.findViewById(R.id.video_error);
+
+        rv = (SqqRecyclerview) rootView.findViewById(R.id.sqqrv);
+        rv.setLayoutManager(new GridLayoutManager(getSelfActivity(), 2));
+        rv.setItemAnimator(new DefaultItemAnimator());
+
+        rv.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                addSubscription(vp.loadItemData(true));
+            }
+        });
+        rv.setOnLoadListener(new OnLoadListener() {
+            @Override
+            public void OnLoadListener() {
+                addSubscription(vp.loadMoreItemData());
+            }
+        });
+
         adapter = new BaseAdapter() {
 
             @Override
@@ -120,19 +133,12 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                intentTo(videoitem_list.get(position).getDescription(), videoitem_list.get(position).getUrl());
+                intentTo(videoitem_list.get(position).getDescription(), videoitem_list.get(position).getUrl()
+                        , HeadlineActivity.class);
             }
         });
 
         rv.setAdapter(adapter);
-    }
-
-    @Override
-    public void intentTo(String title, String url) {
-        Bundle bd= new Bundle();
-        bd.putString(BaseFragment.bundleURL,url);
-        bd.putString(BaseFragment.bundleTITLE,title);
-        goToWithInfo(HeadlineActivity.class, bd);
     }
 
     @Override
@@ -150,8 +156,26 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
 
     @Override
     public void refresh(boolean isRefreshing) {
+        //lv.dismissDialog();
+        loadTextviewEnd();
 
+        adapter.notifyDataSetChanged();
+        rv.setRefreshing(isRefreshing);
     }
+
+    @Override
+    public void finishLoad(boolean hasData) {
+        if(hasData){
+            adapter.notifyDataSetChanged();
+        }
+        rv.endLoadRefresh();
+    }
+
+    @Override
+    public void loadError() {
+        rv.loadError();
+    }
+
     private void loadIngTextview(){
         tv.setTextColor(getResources().getColor(R.color.colorWhite));
         tv.setBackgroundColor(getResources().getColor(R.color.colorGray));

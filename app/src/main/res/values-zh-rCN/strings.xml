@@ -9,6 +9,9 @@
     <string name="t_video">视频</string>
     <string name="t_more">更多</string>
 
+    <!--右上角设置-->
+    <string name="setting_qr">扫描二维码</string>
+
     <!--network相关的信息-->
     <string name="network_error">网络异常，无法连接服务器，请检查网络!</string>
 

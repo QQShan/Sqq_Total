@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.utils.TranslateUtils;
@@ -27,9 +28,6 @@ public class BrowserLayout extends FrameLayout {
     private int mProgressHeight = 5;
     private String mLoadUrl;
     View vg;
-    ImageView titleImg;
-    TextView titleTv;
-    OnImgClickCallback callback;
 
     public BrowserLayout(Context context) {
         this(context, null);
@@ -47,17 +45,6 @@ public class BrowserLayout extends FrameLayout {
     private void initView(Context context){
         con = context;
         vg = LayoutInflater.from(context).inflate(R.layout.webview_new, this, true);
-        titleImg = (ImageView) vg.findViewById(R.id.web_back_img);
-        titleImg.setClickable(true);
-        titleImg.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(callback!=null){
-                    callback.OnImgClick();
-                }
-            }
-        });
-        titleTv  = (TextView) vg.findViewById(R.id.web_back_tv);
 
         //addView(vg, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
@@ -126,14 +113,10 @@ public class BrowserLayout extends FrameLayout {
                  */
                 /*mWebView.loadUrl("javascript:document.body.style.paddingTop" +
                         "=\"12%\";void 0");*/
-                mWebView.loadUrl("javascript:document.body.style.paddingTop" +
-                        "=\""+(getResources().getDimensionPixelSize(R.dimen.title_height)+2)+"px\";void 0");
+                /*mWebView.loadUrl("javascript:document.body.style.paddingTop" +
+                        "=\""+(getResources().getDimensionPixelSize(R.dimen.title_height)+2)+"px\";void 0");*/
             }
         });
-    }
-
-    public void setTitleText(String title){
-        titleTv.setText(title);
     }
 
     public void loadUrl(String url) {
@@ -164,11 +147,4 @@ public class BrowserLayout extends FrameLayout {
         return mWebView != null ? mWebView : null;
     }
 
-    public void setOnImgClickListener(OnImgClickCallback imgcallback){
-        callback = imgcallback;
-    }
-
-    public interface OnImgClickCallback{
-        public void OnImgClick();
-    }
 }

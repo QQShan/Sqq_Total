@@ -1,24 +1,23 @@
 package com.sqq.sqq_total.ui.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.sqq.sqq_total.R;
-import com.sqq.sqq_total.utils.TranslateUtils;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Created by Administrator on 2016/5/30.
@@ -26,29 +25,39 @@ import java.lang.ref.WeakReference;
 public class LeftFragment extends BaseFragment implements View.OnClickListener{
 
     private PagerAdapter mPagerAdapter;
-    private static int mCurPage = 0;
-    TextView tv_headline,tv_pic,tv_text,tv_video;
+    //private static int mCurPage = 0;
+    //TextView tv_headline,tv_pic,tv_text,tv_video;
 
     ViewPager vp;
 
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_left, container, false);
-        tv_headline = (TextView) rootView.findViewById(R.id.headline);
+        /*tv_headline = (TextView) rootView.findViewById(R.id.headline);
         tv_headline.setOnClickListener(this);
         tv_text = (TextView) rootView.findViewById(R.id.text);
         tv_text.setOnClickListener(this);
         tv_pic = (TextView) rootView.findViewById(R.id.pic);
         tv_pic.setOnClickListener(this);
         tv_video = (TextView) rootView.findViewById(R.id.video);
-        tv_video.setOnClickListener(this);
+        tv_video.setOnClickListener(this);*/
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getSelfActivity()).setSupportActionBar(toolbar);
 
         vp = (ViewPager) rootView.findViewById(R.id.left_viewpager);
         //前后缓存三页
         vp.setOffscreenPageLimit(3);
         mPagerAdapter = new MyViewPageAdapter(getChildFragmentManager());
         vp.setAdapter(mPagerAdapter);
-        Log.d("sqqOn", mCurPage + "");
+
+        TabLayout mTab = (TabLayout) rootView.findViewById(R.id.tab);
+        mTab.setupWithViewPager(vp);
+
+        mTab.getTabAt(0).setText(R.string.t_exlpore);
+        mTab.getTabAt(1).setText(R.string.t_text);
+        mTab.getTabAt(2).setText(R.string.t_pic);
+        mTab.getTabAt(3).setText(R.string.t_video);
+        /*Log.d("sqqOn", mCurPage + "");
         vp.setCurrentItem(mCurPage);
         changeTitle(mCurPage);
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -68,7 +77,7 @@ public class LeftFragment extends BaseFragment implements View.OnClickListener{
             public void onPageScrollStateChanged(int state) {
 
             }
-        });
+        });*/
     }
 
     @Override
@@ -98,7 +107,6 @@ public class LeftFragment extends BaseFragment implements View.OnClickListener{
 
         @Override
         public Fragment getItem(int position) {
-            Log.d("sqqF",""+mCurPage);
             if(position==0){
                 return new HeadlineFragment();
             }else if(position==1){
@@ -121,10 +129,9 @@ public class LeftFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("sqq",mCurPage+"");
     }
 
-    public void changeTitle(int pnumber){
+    /*public void changeTitle(int pnumber){
 
         float size = TranslateUtils.sp2px(20, (Context)activityRef.get());
         tv_headline.setTextSize(size);
@@ -156,5 +163,22 @@ public class LeftFragment extends BaseFragment implements View.OnClickListener{
             default:
                 break;
         }
+    }*/
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        /*super.onCreateOptionsMenu(menu, inflater);*/
+        Log.d("sqqqq","onCreateOptionsMenu");
+        inflater.inflate(R.menu.menu_leftfragment, menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id==R.id.Qr_scan){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

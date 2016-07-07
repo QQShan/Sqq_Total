@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,8 @@ import com.sqq.sqq_total.servicedata.TextItem;
 import com.sqq.sqq_total.ui.activity.HeadlineActivity;
 import com.sqq.sqq_total.utils.TimerUtils;
 import com.sqq.sqq_total.view.LoadingView;
+import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
+import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
 
 import java.lang.ref.WeakReference;
@@ -34,7 +37,7 @@ import java.util.List;
  */
 public class TextFragment extends BaseFragment implements TextPresenter.TextFmView{
 
-    RecyclerView rv;
+    SqqRecyclerview rv;
     TextView tv;
     //LoadingView lv;
 
@@ -45,32 +48,23 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
             , R.drawable.img9, R.drawable.img10, R.drawable.img11
             , R.drawable.img12, R.drawable.img13, R.drawable.img14};
-    private String des[] = {"云层里的阳光", "好美的海滩", "好美的海滩", "夕阳西下的美景", "夕阳西下的美景"
-            , "夕阳西下的美景", "夕阳西下的美景", "夕阳西下的美景", "好美的海滩","好美的海滩", "好美的海滩"
-            , "夕阳西下的美景", "夕阳西下的美景", "夕阳西下的美景"};
 
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_text,container,false);
         tp = new TextPresenter(this);
 
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_text,container,false);
-        tv = (TextView) rootView.findViewById(R.id.text_error);
-
-        rv = (RecyclerView) rootView.findViewById(R.id.text_rv);
-        rv.setLayoutManager(new LinearLayoutManager(getSelfActivity(), LinearLayout.VERTICAL, false));
-        rv.setItemAnimator(new DefaultItemAnimator());
-
-        initData();
+        startGetData();
     }
 
     @Override
-    public void initData() {
+    public void startGetData() {
 
         /*lv = new LoadingView(getSelfActivity());
         lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
 
         loadIngTextview();
-        addSubscription(tp.loadItemData(true));
+        addSubscription(tp.loadItemData());
 
         /*lv.setLoadExitListener(new LoadingView.LoadExit() {
             @Override
@@ -82,8 +76,25 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
 
     @Override
     public void initViews(final List<TextItem> list_textitem) {
-        //lv.dismissDialog();
-        loadTextviewEnd();
+        tv = (TextView) rootView.findViewById(R.id.text_error);
+
+        rv = (SqqRecyclerview) rootView.findViewById(R.id.sqqrv);
+        rv.setLayoutManager(new LinearLayoutManager(getSelfActivity(), LinearLayout.VERTICAL, false));
+        rv.setItemAnimator(new DefaultItemAnimator());
+
+        rv.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                addSubscription(tp.loadItemData());
+            }
+        });
+        rv.setOnLoadListener(new OnLoadListener() {
+            @Override
+            public void OnLoadListener() {
+                addSubscription(tp.loadMoreItemData());
+            }
+        });
+
         adapter = new BaseAdapter() {
 
             @Override
@@ -112,18 +123,11 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                intentTo(list_textitem.get(position).getTitle(), list_textitem.get(position).getUrl());
+                intentTo(list_textitem.get(position).getTitle(), list_textitem.get(position).getUrl()
+                        , HeadlineActivity.class);
             }
         });
         rv.setAdapter(adapter);
-    }
-
-    @Override
-    public void intentTo(String title, String url) {
-        Bundle bd= new Bundle();
-        bd.putString(BaseFragment.bundleURL,url);
-        bd.putString(BaseFragment.bundleTITLE,title);
-        goToWithInfo(HeadlineActivity.class, bd);
     }
 
     @Override
@@ -141,7 +145,24 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
 
     @Override
     public void refresh(boolean isRefreshing) {
+        //lv.dismissDialog();
+        loadTextviewEnd();
 
+        adapter.notifyDataSetChanged();
+        rv.setRefreshing(isRefreshing);
+    }
+
+    @Override
+    public void finishLoad(boolean hasData) {
+        if(hasData){
+            adapter.notifyDataSetChanged();
+        }
+        rv.endLoadRefresh();
+    }
+
+    @Override
+    public void loadError() {
+        rv.loadError();
     }
 
     private void loadIngTextview(){

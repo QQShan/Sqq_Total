@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -23,10 +24,14 @@ import com.sqq.sqq_total.presenter.PicPresenter;
 import com.sqq.sqq_total.servicedata.PicItem;
 import com.sqq.sqq_total.ui.activity.HeadlineActivity;
 import com.sqq.sqq_total.view.LoadingView;
+import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
+import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscription;
 
 /**
  * Created by sqq on 2016/5/30.
@@ -34,7 +39,7 @@ import java.util.List;
  */
 public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
 
-    RecyclerView rv;
+    SqqRecyclerview rv;
     TextView tv;
     //LoadingView lv;
 
@@ -45,7 +50,8 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
             , R.drawable.img9, R.drawable.img10, R.drawable.img11
-            , R.drawable.img12, R.drawable.img13, R.drawable.img14};
+            , R.drawable.img12, R.drawable.img13, R.drawable.img14, R.drawable.img14, R.drawable.img14
+            , R.drawable.img14};
 
     private String des[] = {"云层里的阳光", "好美的海滩", "好美的海滩", "夕阳西下的美景", "夕阳西下的美景"
             , "夕阳西下的美景", "夕阳西下的美景", "夕阳西下的美景", "好美的海滩","好美的海滩", "好美的海滩"
@@ -54,44 +60,34 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
 
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        pp = new PicPresenter(this);
-
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_pic, container, false);
+        pp = new PicPresenter(this);
+        startGetData();
+    }
 
+    @Override
+    public void initViews(final List<PicItem> picitem_list) {
         tv = (TextView) rootView.findViewById(R.id.pic_error);
 
-        rv = (RecyclerView) rootView.findViewById(R.id.pic_rv);
+        rv = (SqqRecyclerview) rootView.findViewById(R.id.sqqrv);
         rv.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
         //rv.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
         rv.setItemAnimator(new DefaultItemAnimator());
 
-        initData();
-    }
-
-    @Override
-    public void initData() {
-
-        /*lv = new LoadingView(getSelfActivity());
-        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
-        adapter = null;
-        rv.setAdapter(adapter);
-
-        loadIngTextview();
-        addSubscription(pp.loadItemData(true));
-
-        /*lv.setLoadExitListener(new LoadingView.LoadExit() {
+        rv.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void exit() {
-                pp.unsubscribe();
+            public void onRefresh() {
+                addSubscription(pp.loadItemData());
             }
-        });*/
-    }
+        });
+        rv.setOnLoadListener(new OnLoadListener() {
+            @Override
+            public void OnLoadListener() {
+                addSubscription(pp.loadMoreItemData());
+            }
+        });
 
-    @Override
-    public void initViews(final List<PicItem> picitem_list) {
-        //lv.dismissDialog();
-        loadTextviewEnd();
         adapter = new BaseAdapter() {
             @Override
             public int getItemCount() {
@@ -102,6 +98,7 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
             protected void onBindView(BaseViewHolder holder, int position) {
                 //final TextView tv = holder.getView(R.id.name);
                 //tv.setText(des[position]);
+                Log.d("sqqq","position"+position);
                 ImageView im = holder.getView(R.id.pic);
                 im.setImageResource(resId[position]);
                 //im.setImageResource(R.mipmap.ic_launcher);
@@ -140,18 +137,28 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                intentTo(picitem_list.get(position).getDescription(), picitem_list.get(position).getUrl());
+                intentTo(picitem_list.get(position).getDescription(), picitem_list.get(position).getUrl()
+                        , HeadlineActivity.class);
             }
         });
         rv.setAdapter(adapter);
     }
 
     @Override
-    public void intentTo(String title, String url) {
-        Bundle bd= new Bundle();
-        bd.putString(BaseFragment.bundleURL, url);
-        bd.putString(BaseFragment.bundleTITLE, title);
-        goToWithInfo(HeadlineActivity.class, bd);
+    public void startGetData() {
+
+        /*lv = new LoadingView(getSelfActivity());
+        lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
+
+        loadIngTextview();
+        addSubscription(pp.loadItemData());
+
+        /*lv.setLoadExitListener(new LoadingView.LoadExit() {
+            @Override
+            public void exit() {
+                pp.unsubscribe();
+            }
+        });*/
     }
 
     @Override
@@ -170,7 +177,24 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
 
     @Override
     public void refresh(boolean isRefreshing) {
+        adapter.notifyDataSetChanged();
 
+        //lv.dismissDialog();
+        loadTextviewEnd();
+        rv.setRefreshing(isRefreshing);
+    }
+
+    @Override
+    public void finishLoad(boolean hasData) {
+        if(hasData){
+            adapter.notifyDataSetChanged();
+        }
+        rv.endLoadRefresh();
+    }
+
+    @Override
+    public void loadError() {
+        rv.loadError();
     }
 
     private void loadIngTextview(){
@@ -183,4 +207,6 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
     private void loadTextviewEnd(){
         tv.setVisibility(View.GONE);
     }
+
+
 }

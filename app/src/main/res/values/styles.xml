@@ -1,11 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        &lt;!&ndash; Customize your theme here. &ndash;&gt;
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>-->
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+<!--Light文字都是黑色的 dark文字都是白色的-->
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
     </style>
 
     <style name="SqqTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -20,7 +27,7 @@
 
     </style>
 
-    <style name="Sqqactivity" parent="Theme.AppCompat.Light">
+    <style name="Sqqactivity" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:activityOpenEnterAnimation">@animator/in_anim</item>
         <item name="android:activityOpenExitAnimation">@animator/in_anim</item>
         <item name="android:activityCloseEnterAnimation">@animator/out_anim</item>
@@ -62,4 +69,13 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="tablayoutText" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textSize">22sp</item>
+    </style>
+
 </resources>

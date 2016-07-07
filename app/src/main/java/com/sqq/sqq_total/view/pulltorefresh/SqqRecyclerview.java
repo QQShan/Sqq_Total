@@ -11,8 +11,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.sqq.sqq_total.R;
+
 
 /**
  * 这里还可以优化的地方，最好不要在上拉加载更多的时候还能下拉刷新，不然数据就可能会乱
@@ -37,11 +40,11 @@ public class SqqRecyclerview extends LinearLayout {
     RecyclerView recyclerView;
     Context context;
 
-    /**
-     * 滑动状态
-     * 0表示没有在滑动
-     */
-    //private int STATE=-1;
+    RecyclerViewDataObserver adapterDataObserver;
+
+    boolean dataChanged =false;
+    boolean loadError = false;
+    boolean noMoreData = false;
 
     public SqqRecyclerview(Context context) {
         this(context, null);
@@ -77,70 +80,98 @@ public class SqqRecyclerview extends LinearLayout {
                 LayoutParams.WRAP_CONTENT));
 
         addView(swipeRefreshLayout,
-                new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1));
+                new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1));
 
         /**
          * 更好的做法不是在这里做最后一条之类的判断
          * 后续会加到touch事件里做判断
+         * 手指离开时0
+         * 2是快速滑动伴随0
+         * 1是手指在
          */
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 //STATE = newState;
+                //Log.d("sqqq","state"+newState);
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.d("sqqq","dy:"+dy);
+                //Log.d("sqqq", "dy:" + dy);
+
                 if (!swipeRefreshLayout.isRefreshing()
                         && isLastItemVisible(recyclerView) && !isLoading
-                        && !isFirstItemVisible(recyclerView) &&/*STATE!=0*/dy!=0) {
+                        && !isFirstItemVisible(recyclerView) &&/*STATE!=0*/dy != 0) {
                     //最后一条可见，并且没有在加载中
                     startLoad();
+                }
+
+                if(!swipeRefreshLayout.isRefreshing()
+                        && !isLoading
+                        && dy < -10
+                        && footerView.isShown()){
+                    footerView.setVisibility(View.GONE);
                 }
             }
         });
     }
 
-    /*private boolean isFooterViewShowing(){
-        return footerView.isShown();
-    }*/
+    public void setAdapter(RecyclerView.Adapter adapter){
+        if (adapter == null)
+            throw new NullPointerException("mAdapter is null please call CygSwipeRefreshLayout.setAdapter");
+        if(recyclerView.getAdapter()!=null){
+            if(adapterDataObserver!=null){
+                recyclerView.getAdapter().unregisterAdapterDataObserver(adapterDataObserver);
+                adapterDataObserver=null;
+            }
+        }
+        recyclerView.setAdapter(adapter);
+        adapterDataObserver = new RecyclerViewDataObserver();
+        recyclerView.getAdapter().registerAdapterDataObserver(adapterDataObserver);
+    }
+
+    public void setLayoutManager(RecyclerView.LayoutManager layout) {
+        recyclerView.setLayoutManager(layout);
+    }
+
+    public void setItemAnimator(RecyclerView.ItemAnimator animator){
+        recyclerView.setItemAnimator(animator);
+    }
 
     private void startLoad(){
         //开始加载之后recyclerview上移，footerview显示
-        if(onLoadListener!=null){
-            footerView.setVisibility(View.VISIBLE);
-
-            recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount()-1);
-            isLoading = true;
-            onLoadListener.OnLoadListener();
+        recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount()-1);
+        if(!noMoreData){
+            if(onLoadListener!=null){
+                showLoading();
+            }
+        }else{
+            if(!footerView.isShown())
+                footerView.setVisibility(View.VISIBLE);
         }
     }
 
-    /**
-     * 如果有加载到数据
-     * 结束加载更多
-     */
-    public void endLoadRefresh(){
-        footerView.setVisibility(View.GONE);
-        /**
-         * 这里非正规做法，这里只要向上移动一段距离就行，不管多少
-         * 最好露出一点，让用户知道你加载了数据
-         * 全部露出的话，在只加载了一条数据的时候会有问题
-         */
-        recyclerView.scrollBy(0,-10);
-        isLoading = false;
-    }
 
-    public void endLoadRefreshWithNoData(){
-        footerView.setVisibility(View.GONE);
+
+    public void endLoadRefresh(){
         isLoading = false;
+        if(!dataChanged){
+            //如果没有加载到数据，说明已经没有更多数据，加载失败是由外部调用
+            showLoadNoMoreData();
+        }else{
+            footerView.setVisibility(View.GONE);
+        }
+        dataChanged = false;
+
     }
 
     public void setRefreshing(boolean ing){
         swipeRefreshLayout.setRefreshing(ing);
+        dataChanged = false;
+        noMoreData = false;
     }
 
     public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener listener){
@@ -156,26 +187,98 @@ public class SqqRecyclerview extends LinearLayout {
 
     private void addfooterView(){
         footerView = LayoutInflater.from(context).inflate(R.layout.refreshfooterview,this,false);
-        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         //lp.gravity = Gravity.BOTTOM;
         footerView.setLayoutParams(lp);
         addView(footerView);
         footerView.setVisibility(View.GONE);
+
+        footerView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isLoading&&loadError){
+                    showLoading();
+                }
+            }
+        });
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter){
-        if (adapter == null)
-            throw new NullPointerException("mAdapter is null please call CygSwipeRefreshLayout.setAdapter");
-        recyclerView.setAdapter(adapter);
+    private void showLoadNoMoreData(){
+        noMoreData = true;
+        TextView tv = (TextView) footerView.findViewById(R.id.fv_textview);
+        tv.setText("没有更多数据");
+        ProgressBar pb = (ProgressBar) footerView.findViewById(R.id.fv_progressbar);
+        pb.setVisibility(View.GONE);
     }
 
-    public void setLayoutManager(RecyclerView.LayoutManager layout) {
-        recyclerView.setLayoutManager(layout);
+    public void loadError(){
+        loadError = true;
+        isLoading = false;
+        TextView tv = (TextView) footerView.findViewById(R.id.fv_textview);
+        tv.setText("加载失败,点击继续加载!");
+        ProgressBar pb = (ProgressBar) footerView.findViewById(R.id.fv_progressbar);
+        pb.setVisibility(View.GONE);
     }
 
-    public void setItemAnimator(RecyclerView.ItemAnimator animator){
-        recyclerView.setItemAnimator(animator);
+    private void showLoading(){
+        loadError = false;
+        isLoading = true;
+        onLoadListener.OnLoadListener();
+        footerView.setVisibility(View.VISIBLE);
+        TextView tv = (TextView) footerView.findViewById(R.id.fv_textview);
+        tv.setText("加载中");
+        ProgressBar pb = (ProgressBar) footerView.findViewById(R.id.fv_progressbar);
+        pb.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if(adapterDataObserver!=null&&recyclerView.getAdapter()!=null){
+            recyclerView.getAdapter().unregisterAdapterDataObserver(adapterDataObserver);
+            adapterDataObserver=null;
+        }
+    }
+
+    private class RecyclerViewDataObserver extends RecyclerView.AdapterDataObserver{
+        @Override
+        public void onChanged() {
+            dataChanged = true;
+            Log.d("rec","onchanged");
+            //updateEmptyViewShown(mEmptyDataSetAdapter == null || mEmptyDataSetAdapter.getItemCount() == 0);
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            Log.d("rec","onItemRangeChanged2");
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+            Log.d("rec","onItemRangeChanged3");
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            Log.d("rec","onItemRangeInserted2");
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            Log.d("rec","onItemRangeMoved3");
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            Log.d("rec","onItemRangeMoved2");
+            onChanged();
+        }
+    }
+
 
     /**
      * 判断第一个条目是否完全可见
@@ -239,4 +342,25 @@ public class SqqRecyclerview extends LinearLayout {
         View lastVisibleChild = recyclerView.getChildAt(recyclerView.getChildCount() - 1);
         return lastVisibleChild != null ? recyclerView.getChildAdapterPosition(lastVisibleChild) : -1;
     }
+
+
+
+
+    ////////////////已经废除的方法
+
+    /**
+     *
+     * 如果有加载到数据
+     * 结束加载更多
+     */
+   /* private void endLoadRefresh(){
+        footerView.setVisibility(View.GONE);
+        *//**
+     * 这里非正规做法，这里只要向上移动一段距离就行，不管多少
+     * 最好露出一点，让用户知道你加载了数据
+     * 全部露出的话，在只加载了一条数据的时候会有问题
+     *//*
+        recyclerView.scrollBy(0,-10);
+        isLoading = false;
+    }*/
 }

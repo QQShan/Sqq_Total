@@ -13,7 +13,13 @@
         tools:text="文字"
         android:visibility="gone"/>
 
-    <android.support.v7.widget.RecyclerView
+    <com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview
+        android:id="@+id/sqqrv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview>
+    <!--<android.support.v7.widget.RecyclerView
         style="@style/recyclerview"
-        android:id="@+id/text_rv"></android.support.v7.widget.RecyclerView>
+        android:id="@+id/text_rv"></android.support.v7.widget.RecyclerView>-->
 </FrameLayout>

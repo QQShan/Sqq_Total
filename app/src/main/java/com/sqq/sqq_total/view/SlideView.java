@@ -141,12 +141,12 @@ public class SlideView extends FrameLayout implements ViewPager.OnPageChangeList
         // 手指向左滑动和手指向右滑动的position不一样
         // 手指向左滑动的时候大部分时间position是和当前页一样的，向右滑动的时候position大部分时间和目标页相同
         // positionOffset向左滑的时候逐渐变大，右滑的时候逐渐变小
-        Log.d("page","position:"+position+" offset:"+positionOffset);
+        //Log.d("page","position:"+position+" offset:"+positionOffset);
         if (positionOffset < 0.01) {
             if (position == 0) {
                 vp.setCurrentItem(size - 2, false);
             } else if (position == size - 1) {
-                Log.d("page","调用了");
+                //Log.d("page","调用了");
                 vp.setCurrentItem(1, false);
             }
         }

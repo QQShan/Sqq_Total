@@ -22,8 +22,6 @@
             android:id="@+id/pic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:scaleType="fitXY"
             android:adjustViewBounds="true"
             android:maxWidth="1000dip"
             android:maxHeight="1000dip"

@@ -25,6 +25,8 @@ import com.sqq.sqq_total.ui.activity.HeadlineActivity;
 import com.sqq.sqq_total.utils.TimerUtils;
 import com.sqq.sqq_total.utils.TranslateUtils;
 import com.sqq.sqq_total.view.SlideView;
+import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
+import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +37,8 @@ import java.util.List;
 public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.HeadlineView{
 
     //ViewPager vp;
-    RecyclerView rv;
-    SwipeRefreshLayout swipeRefreshLayout;
+    /*RecyclerView rv;*/
+    SqqRecyclerview sqqrv;
     TextView tv;
     BaseAdapter adapter;
     SlideView sv;
@@ -47,10 +49,6 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
     HeadlinePresenter hPresenter;
     List<View> viewpagerViews;
 
-    private static final int[] DEFAULT_COLOR_RES = new int[]{android.R.color.holo_blue_light, android.R.color.holo_red_light,
-            android.R.color.holo_orange_light, android.R.color.holo_green_light};
-    /*private static final int[] DEFAULT_COLOR_RES = new int[]{R.color.black, R.color.black,
-            R.color.black, R.color.black};*/
 
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
             , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
@@ -69,7 +67,7 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
         //在这里发现一个问题，每次即使从磁盘缓存中读取内容依旧很慢,解决办法viewpager多缓存几页
         hPresenter = new HeadlinePresenter(this);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.sf);
+        /*swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.sf);
         swipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
         swipeRefreshLayout.setColorSchemeResources(DEFAULT_COLOR_RES);
         int start = getSelfActivity().getResources().getDimensionPixelSize(R.dimen.title_height);
@@ -84,7 +82,23 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
         rv = (RecyclerView) rootView.findViewById(R.id.headline_rv);
         rv.setLayoutManager(new LinearLayoutManager(getSelfActivity(), LinearLayout.VERTICAL, false));
-        rv.setItemAnimator(new DefaultItemAnimator());
+        rv.setItemAnimator(new DefaultItemAnimator());*/
+        sqqrv = (SqqRecyclerview) rootView.findViewById(R.id.sqqrv);
+        sqqrv.setLayoutManager(new LinearLayoutManager(getSelfActivity(), LinearLayout.VERTICAL, false));
+        sqqrv.setItemAnimator(new DefaultItemAnimator());
+
+        sqqrv.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                addSubscription(hPresenter.loadItemData());
+            }
+        });
+        sqqrv.setOnLoadListener(new OnLoadListener() {
+            @Override
+            public void OnLoadListener() {
+                addSubscription(hPresenter.loadMoreItemData());
+            }
+        });
 
         tv = (TextView) rootView.findViewById(R.id.headline_error);
 
@@ -100,7 +114,7 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
         /*lv = new LoadingView(getSelfActivity());
         lv.showDialog(getSelfActivity().getString(R.string.lv_tip));*/
         loadIngTextview();
-        addSubscription(hPresenter.loadItemData(true));
+        addSubscription(hPresenter.loadItemData());
        /* lv.setLoadExitListener(new LoadingView.LoadExit() {
             @Override
             public void exit() {
@@ -172,19 +186,18 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
             public void onItemClick(int position) {
                 Log.d("sqqq", "点击了" + position);
                 if (getSelfActivity() != null && position != 0) {
-                    intentTo(headlineItemsitems.get(position - 1).getTitle(), headlineItemsitems.get(position - 1).getUrl());
+                    intentTo(headlineItemsitems.get(position - 1).getTitle(), headlineItemsitems.get(position - 1).getUrl()
+                            , HeadlineActivity.class);
                 }
             }
         });
-        rv.setAdapter(adapter);
+        sqqrv.setAdapter(adapter);
     }
 
     @Override
     public void intentTo(String title,String url) {
-        Bundle bd= new Bundle();
-        bd.putString(BaseFragment.bundleURL,url);
-        bd.putString(BaseFragment.bundleTITLE, title);
-        goToWithInfo(HeadlineActivity.class, bd);
+        intentTo(title, url
+                , HeadlineActivity.class);
     }
 
     @Override
@@ -204,9 +217,23 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
 
     @Override
     public void refresh(boolean isRefreshing) {
-        swipeRefreshLayout.setRefreshing(isRefreshing);
+        adapter.notifyDataSetChanged();
+        sqqrv.setRefreshing(isRefreshing);
     }
 
+    @Override
+    public void finishLoad(boolean hasData) {
+        Log.d("sqqq", "finishLoad");
+        if(hasData){
+            adapter.notifyDataSetChanged();
+        }
+        sqqrv.endLoadRefresh();
+    }
+
+    @Override
+    public void loadError() {
+        sqqrv.loadError();
+    }
 
     private void loadIngTextview(){
         tv.setTextColor(getResources().getColor(R.color.colorWhite));

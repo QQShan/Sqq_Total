@@ -1,6 +1,7 @@
 package com.sqq.sqq_total.presenter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.sqq.sqq_total.App;
 import com.sqq.sqq_total.AppConfig;
@@ -28,7 +29,7 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
         if(collect && !hasNetwork){
             //Log.d("sqqq","有网络,初始化数据");
             tfv.hideErrorView();
-            tfv.initData();
+            tfv.startGetData();
             hasNetwork = true;
         }else{
             //没有网络
@@ -37,12 +38,13 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
         }
     }
     public interface TextFmView{
-        public void initData();
+        public void startGetData();
         public void initViews(List<TextItem> list);
-        public void intentTo(String title,String url);
         public void getDataError(String info);
         public void hideErrorView();
         public void refresh(boolean isRefreshing);
+        public void finishLoad(boolean hasData);
+        public void loadError();
     }
 
     TextFmView tfv;
@@ -54,14 +56,14 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
         list_textitem = new ArrayList<>();
 
         NetWorkUtil.getInstance().addNetWorkListener(this);
+        tfv.initViews(list_textitem);
     }
 
     /**
      * 如果清理会重新加载adapter
-     * @param ifClear
      * @return
      */
-    public Subscription loadItemData(final boolean ifClear){
+    public Subscription loadItemData(){
 
         s = App.getRetrofitInstance().getApiService()
                 .getLatestTextItemInfo(AppConfig.textItemCount)
@@ -91,17 +93,53 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
 
                     @Override
                     public void onNext(List<TextItem> textItems) {
-                        if(ifClear){
-                            list_textitem.clear();
-                        }
+                        list_textitem.clear();
                         list_textitem.addAll(textItems);
-                        tfv.initViews(list_textitem);
+
                     }
                 });
 
         return s;
     }
 
+    /**
+     * 加载更多
+     */
+    public Subscription loadMoreItemData(){
+        s = App.getRetrofitInstance().getApiService()
+                .getTextItemInfo(AppConfig.textItemCount,list_textitem.get(list_textitem.size()-1).getId())
+                .map(new Func1<List<TextItem>, Boolean>() {
+                    @Override
+                    public Boolean call(List<TextItem> textItems) {
+                        if(textItems!=null&&textItems.size()!=0){
+                            Log.d("sqqq", "loadmore" + textItems.size());
+                            list_textitem.addAll(textItems);
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        tfv.loadError();
+                    }
+
+                    @Override
+                    public void onNext(Boolean s) {
+                        tfv.finishLoad(s);
+                    }
+                });
+        return s;
+    }
     public void unsubscribe(){
         if(!s.isUnsubscribed())
             s.unsubscribe();

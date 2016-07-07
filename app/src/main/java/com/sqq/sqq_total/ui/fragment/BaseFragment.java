@@ -60,6 +60,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         Log.d("fragment", "onCreate");
     }
 
@@ -159,5 +160,12 @@ public abstract class BaseFragment extends Fragment {
                 R.animator.in_anim,
                 R.animator.out_anim
         );
+    }
+
+    protected void intentTo(String title, String url,Class<?> actc) {
+        Bundle bd= new Bundle();
+        bd.putString(BaseFragment.bundleURL, url);
+        bd.putString(BaseFragment.bundleTITLE, title);
+        goToWithInfo(actc, bd);
     }
 }

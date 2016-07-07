@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <ProgressBar
         android:id="@+id/my_profile_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:layout_marginTop="@dimen/title_height"
         android:background="@null"
         android:indeterminateOnly="false"
         android:max="100"
@@ -16,31 +16,6 @@
     <WebView
         android:id="@+id/webview_fr"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:paddingTop="@dimen/title_height"></WebView>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/title_height"
-        android:background="@color/transparent">
-    <ImageView
-        android:id="@+id/web_back_img"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:src="@android:drawable/ic_media_rew"/>
+        android:layout_height="match_parent"></WebView>
 
-    <TextView
-        android:id="@+id/web_back_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:textColor="@color/colorTitleText"
-        android:layout_centerInParent="true"
-        android:textSize="20sp"
-        android:gravity="center"
-        tools:text="更多"/>
-    </RelativeLayout>
-
-
-</FrameLayout>
+</LinearLayout>

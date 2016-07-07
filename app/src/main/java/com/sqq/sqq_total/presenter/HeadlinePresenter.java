@@ -51,6 +51,8 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
         public void getDataError(String info);
         public void hideErrorView();
         public void refresh(boolean isRefreshing);
+        public void finishLoad(boolean hasData);
+        public void loadError();
     }
 
     private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
@@ -77,10 +79,9 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
     /**
      * 如果清理会重新加载adapter
      * 加载轮播图在内的数据
-     * @param ifClear
      * @return
      */
-    public Subscription loadItemData(final boolean ifClear){
+    public Subscription loadItemData(){
 
         s = Observable
                 .zip(App.getRetrofitInstance().getApiService()
@@ -90,11 +91,8 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
                         new Func2<List<HeadlineItem>, List<SlideviewItem>, Void>() {
                             @Override
                             public Void call(List<HeadlineItem> headlineItems, List<SlideviewItem> slideviewItems) {
-                                if (ifClear) {
-                                    Log.d("sqqq",headlineItemsitems.size()+"");
-                                    headlineItemsitems.clear();
-                                    slideviewItemsitems.clear();
-                                }
+                                headlineItemsitems.clear();
+                                slideviewItemsitems.clear();
 
                                 headlineItemsitems.addAll(headlineItems);
                                 slideviewItemsitems.addAll(slideviewItems);
@@ -129,10 +127,7 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
 
                     @Override
                     public void onNext(Void s) {
-                        if(ifClear){
-                            view.initViews(headlineItemsitems,slideviewItemsitems);
-                        }
-
+                        view.initViews(headlineItemsitems,slideviewItemsitems);
                     }
                 });
         return s;
@@ -177,6 +172,61 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
         }
         return lv;
     }
+
+    /**
+     * 加载更多
+     */
+    public Subscription loadMoreItemData(){
+        s = App.getRetrofitInstance().getApiService()
+                .getItemInfo(AppConfig.headlineItemCount,headlineItemsitems.get(headlineItemsitems.size()-1).getId())
+                .map(new Func1<List<HeadlineItem>, Boolean>() {
+
+                    @Override
+                    public Boolean call(List<HeadlineItem> headlineItems) {
+                        if(headlineItems!=null&&headlineItems.size()!=0){
+                            Log.d("sqqq", "loadmore" + headlineItems.size());
+                            headlineItemsitems.addAll(headlineItems);
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                })
+                .map(new Func1<Boolean, Boolean>() {
+                    @Override
+                    public Boolean call(Boolean aVoid) {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return aVoid;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        //没有网络，但是缓存中有数据就不会调用这里
+                        Log.d("sqqq", throwable.toString());
+                        view.loadError();
+                    }
+
+                    @Override
+                    public void onNext(Boolean s) {
+                        view.finishLoad(s);
+                        //view.initViews(headlineItemsitems, slideviewItemsitems);
+                    }
+                });
+        return s;
+    }
+
     public void unsubscribe(){
         if(!s.isUnsubscribed())
             s.unsubscribe();

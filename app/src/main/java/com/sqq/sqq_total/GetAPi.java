@@ -31,7 +31,7 @@ public interface GetAPi {
      * @param count
      * @return
      */
-    @Headers("Cache-Control:max-age=60")
+    @Headers("Cache-Control:max-age=10")
     @GET("headlineitem.php")
     Observable<List<HeadlineItem>> getLatestItemInfo(@Query("count") int count);
 
@@ -41,15 +41,16 @@ public interface GetAPi {
      * @param id
      * @return
      */
+    @Headers("Cache-Control:max-age=3600")
     @GET("headlineitem.php")
-    Observable<List<HeadlineItem>> getItemInfo(@Query("count") int count,@Query("id") int id);
+    Observable<List<HeadlineItem>> getItemInfo(@Query("count") int count,@Query("id") long id);
 
     /**
      * 加载最新的count条数据，用于下拉刷新和一开始加载的时候,默认是4
      * @param count
      * @return
      */
-    @Headers("Cache-Control:max-age=60")
+    @Headers("Cache-Control:max-age=10")
     @GET("slideviewitem.php")
     Observable<List<SlideviewItem>> getLatestSlideviewInfo(@Query("count") int count);
 
@@ -68,7 +69,7 @@ public interface GetAPi {
      * @param count
      * @return
      */
-    @Headers("Cache-Control:max-age=640000")
+    @Headers("Cache-Control:max-age=10")
     @GET("textitem.php")
     Observable<List<TextItem>> getLatestTextItemInfo(@Query("count") int count);
 
@@ -78,8 +79,9 @@ public interface GetAPi {
      * @param id
      * @return
      */
+    @Headers("Cache-Control:max-age=3600")
     @GET("textitem.php")
-    Observable<List<TextItem>> getTextItemInfo(@Query("count") int count,@Query("id") int id);
+    Observable<List<TextItem>> getTextItemInfo(@Query("count") int count,@Query("id") long id);
 
     ///////////////////picitem///////////////////
     /**
@@ -87,7 +89,7 @@ public interface GetAPi {
      * @param count
      * @return
      */
-    @Headers("Cache-Control:max-age=640000")
+    @Headers("Cache-Control:max-age=10")
     @GET("picitem.php")
     Observable<List<PicItem>> getLatestPicItemInfo(@Query("count") int count);
 
@@ -97,8 +99,9 @@ public interface GetAPi {
      * @param id
      * @return
      */
+    @Headers("Cache-Control:max-age=3600")
     @GET("picitem.php")
-    Observable<List<PicItem>> getPicItemInfo(@Query("count") int count,@Query("id") int id);
+    Observable<List<PicItem>> getPicItemInfo(@Query("count") int count,@Query("id") long id);
 
     ///////////////////videoitem///////////////////
     /**
@@ -106,7 +109,7 @@ public interface GetAPi {
      * @param count
      * @return
      */
-    @Headers("Cache-Control:max-age=640000")
+    @Headers("Cache-Control:max-age=10")
     @GET("videoitem.php")
     Observable<List<VideoItem>> getLatestVideoItemInfo(@Query("count") int count);
 
@@ -116,8 +119,9 @@ public interface GetAPi {
      * @param id
      * @return
      */
+    @Headers("Cache-Control:max-age=3600")
     @GET("videoitem.php")
-    Observable<List<VideoItem>> getVideoItemInfo(@Query("count") int count,@Query("id") int id);
+    Observable<List<VideoItem>> getVideoItemInfo(@Query("count") int count,@Query("id") long id);
 
 
 

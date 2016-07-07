@@ -21,7 +21,13 @@
         android:textSize="30sp"
         tools:text="文字"
         android:visibility="gone"/>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview
+        android:id="@+id/sqqrv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview>
+    <!--<android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/sf"
         android:paddingTop="@dimen/title_height"
         android:clipToPadding="false"
@@ -32,5 +38,5 @@
             style="@style/recyclerview"
             android:id="@+id/headline_rv"
         ></android.support.v7.widget.RecyclerView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>-->
 </FrameLayout>
