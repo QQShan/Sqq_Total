@@ -4,9 +4,9 @@
         <!--透明底部导航栏-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
         <!--透明状态栏-->
-        <item name="android:windowTranslucentStatus">true</item>
-        <!--是状态栏，导航栏可绘制-->
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>
+        &lt;!&ndash;是状态栏，导航栏可绘制&ndash;&gt;
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <!--<item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>-->
         <!--<item name="android:statusBarColor">@android:color/transparent</item>-->

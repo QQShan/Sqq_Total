@@ -11,6 +11,7 @@
 
     <!--右上角设置-->
     <string name="setting_qr">扫描二维码</string>
+    <string name="setting_uploadpic">上传图片</string>
 
     <!--network相关的信息-->
     <string name="network_error">网络异常，无法连接服务器，请检查网络!</string>
@@ -30,4 +31,13 @@
     <!--LoadingView-->
     <string name="lv_tip">正在努力加载...</string>
 
+    <!--drawer的文字-->
+    <string name="drawer_nologin">未登录</string>
+    <string name="drawer_login">点击头像登录</string>
+    <string name="drawer_main_func">主功能</string>
+    <string name="drawer_main">主页</string>
+    <string name="drawer_info">个人信息</string>
+    <string name="drawer_others">其他功能</string>
+    <string name="drawer_share">分享</string>
+    <string name="drawer_changeSkin">换主题</string>
 </resources>

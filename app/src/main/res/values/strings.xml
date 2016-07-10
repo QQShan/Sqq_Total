@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Sqq_Total</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!--配置文件的key-->
     <string name="prefer_headlineItemId">headlineItemId</string>    //已经加载的内容最后一条的id

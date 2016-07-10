@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<group android:checkableBehavior="single">
+        <item android:id="@+id/nav_main" android:icon="@android:drawable/ic_menu_upload_you_tube"
+            android:title="@string/drawer_main" />
+        <item android:id="@+id/nav_info" android:icon="@android:drawable/ic_menu_info_details"
+            android:title="@string/drawer_info" />
+    </group>-->
+
+    <item android:title="@string/drawer_main_func">
+        <menu>
+            <item android:id="@+id/nav_main" android:icon="@android:drawable/ic_menu_upload_you_tube"
+                android:title="@string/drawer_main" />
+            <item android:id="@+id/nav_info" android:icon="@android:drawable/ic_menu_info_details"
+                android:title="@string/drawer_info" />
+        </menu>
+    </item>
+
+    <item android:title="@string/drawer_others">
+        <menu>
+            <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
+                android:title="@string/drawer_share" />
+            <item android:id="@+id/nav_changeSkin" android:icon="@android:drawable/ic_menu_gallery"
+                android:title="@string/drawer_changeSkin" />
+        </menu>
+    </item>
+</menu>

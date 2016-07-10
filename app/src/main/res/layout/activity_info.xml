@@ -7,12 +7,5 @@
     >
     <include layout="@layout/toolbar_ret"/>
 
-    <com.sqq.sqq_total.view.BrowserLayout
-        android:id="@+id/act_headline_bl"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    </com.sqq.sqq_total.view.BrowserLayout>
 
 </android.support.design.widget.CoordinatorLayout>

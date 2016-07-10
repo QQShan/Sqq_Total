@@ -139,6 +139,9 @@ public abstract class BaseFragment extends Fragment {
         return null;
     }
 
+    public boolean onBackPressed(){
+        return false;
+    }
     protected void goTo(Class<?> actc){
         Intent intent = new Intent();
         intent.setClass(getSelfActivity(), actc);

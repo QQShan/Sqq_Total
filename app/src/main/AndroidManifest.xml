@@ -14,7 +14,8 @@
         android:name=".App"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name=".ui.activity.MainActivity">
+        <activity android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,6 +26,13 @@
         </activity>
         <activity android:name=".ui.activity.PicActivity" >
         </activity>
+        <activity android:name=".ui.activity.VideoActivity" >
+        </activity>
+
+        <activity android:name=".ui.activity.InfoActivity"
+            android:launchMode="singleTask">
+        </activity>
+
         <receiver android:name=".receiver.NetWorkReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
