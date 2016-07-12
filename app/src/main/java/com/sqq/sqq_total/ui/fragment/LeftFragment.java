@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sqq.sqq_total.R;
+import com.sqq.sqq_total.ui.activity.CaptureActivity;
 import com.sqq.sqq_total.ui.activity.InfoActivity;
 import com.sqq.sqq_total.ui.activity.MainActivity;
 
@@ -110,6 +111,7 @@ public class LeftFragment extends BaseFragment implements NavigationView.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.Qr_scan:
+                goTo(CaptureActivity.class);
                 break;
             case R.id.upload_pic:
                 break;

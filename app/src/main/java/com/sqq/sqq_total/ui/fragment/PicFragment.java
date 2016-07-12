@@ -27,6 +27,7 @@ import com.sqq.sqq_total.view.LoadingView;
 import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
 import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,18 +46,6 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
 
     BaseAdapter adapter;
     PicPresenter pp;
-
-
-    private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
-            , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
-            , R.drawable.img9, R.drawable.img10, R.drawable.img11
-            , R.drawable.img12, R.drawable.img13, R.drawable.img14, R.drawable.img14, R.drawable.img14
-            , R.drawable.img14};
-
-    private String des[] = {"云层里的阳光", "好美的海滩", "好美的海滩", "夕阳西下的美景", "夕阳西下的美景"
-            , "夕阳西下的美景", "夕阳西下的美景", "夕阳西下的美景", "好美的海滩","好美的海滩", "好美的海滩"
-            , "夕阳西下的美景", "夕阳西下的美景", "夕阳西下的美景"};
-
 
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,9 +87,9 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
             protected void onBindView(BaseViewHolder holder, int position) {
                 //final TextView tv = holder.getView(R.id.name);
                 //tv.setText(des[position]);
-                Log.d("sqqq","position"+position);
+                Log.d("sqqq", "position" + position);
                 ImageView im = holder.getView(R.id.pic);
-                im.setImageResource(resId[position]);
+                Picasso.with(getSelfActivity()).load(picitem_list.get(position).getPicUrl()).into(im);
                 //im.setImageResource(R.mipmap.ic_launcher);
                 //下面的功能是计算出图片的显著的颜色赋值给textview，这个功能可以去掉
                 //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), resId[position]);

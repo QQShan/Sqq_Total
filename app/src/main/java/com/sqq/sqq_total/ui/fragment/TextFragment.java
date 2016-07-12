@@ -27,6 +27,7 @@ import com.sqq.sqq_total.view.LoadingView;
 import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
 import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -43,11 +44,6 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
 
     BaseAdapter adapter;
     TextPresenter tp;
-
-    private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
-            , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
-            , R.drawable.img9, R.drawable.img10, R.drawable.img11
-            , R.drawable.img12, R.drawable.img13, R.drawable.img14};
 
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,7 +108,7 @@ public class TextFragment extends BaseFragment implements TextPresenter.TextFmVi
                 tv_time.setText(TimerUtils.getTimeUpToNow(list_textitem.get(position).getTime(),getSelfActivity()));
 
                 ImageView im = holder.getView(R.id.ti_pic);
-                im.setImageResource(resId[position]);
+                Picasso.with(getSelfActivity()).load(list_textitem.get(position).getPicUrl()).into(im);
             }
 
             @Override

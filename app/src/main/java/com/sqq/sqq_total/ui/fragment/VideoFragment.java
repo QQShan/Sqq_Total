@@ -34,6 +34,7 @@ import com.sqq.sqq_total.view.SlideView;
 import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
 import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -50,11 +51,6 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
 
     BaseAdapter adapter;
     VideoPresenter vp;
-
-    private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
-            , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
-            , R.drawable.img9, R.drawable.img10, R.drawable.img11
-            , R.drawable.img12, R.drawable.img13, R.drawable.img14};
 
     @Override
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -114,14 +110,14 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
                 final TextView tv = holder.getView(R.id.videoitem_desc);
                 tv.setText(videoitem_list.get(position).getDescription());
                 TextView tv1 = holder.getView(R.id.videoitem_time);
-                tv1.setText(TimerUtils.getTimeUpToNow(videoitem_list.get(position).getTime(),getSelfActivity()));
+                tv1.setText(TimerUtils.getTimeUpToNow(videoitem_list.get(position).getTime(), getSelfActivity()));
 
                 TextView tv2 = holder.getView(R.id.videoitem_counts);
-                tv2.setText(NumberUtils.getVideoWatchNumber(getSelfActivity(),videoitem_list.get(position)
-                .getNumber()));
+                tv2.setText(NumberUtils.getVideoWatchNumber(getSelfActivity(), videoitem_list.get(position)
+                        .getNumber()));
 
                 ImageView im = holder.getView(R.id.videoitem_pic);
-                im.setImageResource(resId[position]);
+                Picasso.with(getSelfActivity()).load(videoitem_list.get(position).getPicUrl()).into(im);
 
             }
 

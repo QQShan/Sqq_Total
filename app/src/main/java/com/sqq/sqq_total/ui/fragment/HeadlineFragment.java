@@ -28,6 +28,8 @@ import com.sqq.sqq_total.view.SlideView;
 import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
 import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,11 +51,6 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
     HeadlinePresenter hPresenter;
     List<View> viewpagerViews;
 
-
-    private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
-            , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
-            , R.drawable.img9, R.drawable.img10, R.drawable.img11
-            , R.drawable.img12, R.drawable.img13, R.drawable.img14};
 
     @Override
     public void onAttach(Context context) {
@@ -154,12 +151,9 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
                     final TextView hl_time = holder.getView(R.id.hl_time);
                     hl_time.setText(TimerUtils.getTimeUpToNow(headlineItemsitems.get(position-1).getTime(),getSelfActivity()));
 
-                    //图片加载的话先放一放
+                    //图片加载的话先使用picasso
                     ImageView im = holder.getView(R.id.hl_pic);
-                    if(position>14){
-                        position=1;
-                    }
-                    im.setImageResource(resId[position-1]);
+                    Picasso.with(getSelfActivity()).load(headlineItemsitems.get(position-1).getPicUrl()).into(im);
                 }
             }
 

@@ -14,6 +14,7 @@ import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.servicedata.HeadlineItem;
 import com.sqq.sqq_total.servicedata.SlideviewItem;
 import com.sqq.sqq_total.utils.NetWorkUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +55,6 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
         public void finishLoad(boolean hasData);
         public void loadError();
     }
-
-    private int resId[] = {R.drawable.img1, R.drawable.img2, R.drawable.img3
-            , R.drawable.img4, R.drawable.img5, R.drawable.img6, R.drawable.img7, R.drawable.img8
-            , R.drawable.img9, R.drawable.img10, R.drawable.img11
-            , R.drawable.img12, R.drawable.img13, R.drawable.img14};
 
     Subscription s;
     public HeadlineView view;
@@ -143,20 +139,20 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
                 //首尾各一条,为了无限滑动的效果
                 if(s==-1){
                     ImageView img = (ImageView) v.findViewById(R.id.img);
-                    img.setImageResource(resId[slideviewItemsitems.size()-1]);
+                    Picasso.with(context).load(slideviewItemsitems.get(slideviewItemsitems.size()-1).getPicUrl()).into(img);
 
                     TextView tv = (TextView) v.findViewById(R.id.tv);
                     tv.setText(slideviewItemsitems.get(slideviewItemsitems.size()-1).getTitle());
                 }else{
                     ImageView img = (ImageView) v.findViewById(R.id.img);
-                    img.setImageResource(resId[0]);
+                    Picasso.with(context).load(slideviewItemsitems.get(0).getPicUrl()).into(img);
 
                     TextView tv = (TextView) v.findViewById(R.id.tv);
                     tv.setText(slideviewItemsitems.get(0).getTitle());
                 }
             }else{
                 ImageView img = (ImageView) v.findViewById(R.id.img);
-                img.setImageResource(resId[s]);
+                Picasso.with(context).load(slideviewItemsitems.get(s).getPicUrl()).into(img);
 
                 TextView tv = (TextView) v.findViewById(R.id.tv);
                 tv.setText(slideviewItemsitems.get(s).getTitle());
