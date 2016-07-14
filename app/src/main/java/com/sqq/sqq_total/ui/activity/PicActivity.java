@@ -10,7 +10,7 @@ import com.sqq.sqq_total.R;
 /**
  * Created by Administrator on 2016/6/6.
  */
-public class PicActivity extends AppCompatActivity{
+public class PicActivity extends BaseActivity{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

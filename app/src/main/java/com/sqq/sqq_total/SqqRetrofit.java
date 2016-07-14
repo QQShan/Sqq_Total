@@ -110,6 +110,7 @@ public class SqqRetrofit {
                         .build();
             }
             Log.d("sqqq","请求"+request.headers().toString());
+            //Log.d("sqqq","请求"+request.body().toString());
             Response response = chain.proceed(request);
             if (NetWorkUtil.getInstance().isConnected()) {
                 //如果有网络

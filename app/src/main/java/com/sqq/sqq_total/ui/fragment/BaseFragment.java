@@ -171,4 +171,10 @@ public abstract class BaseFragment extends Fragment {
         bd.putString(BaseFragment.bundleTITLE, title);
         goToWithInfo(actc, bd);
     }
+
+    protected void intentTo(String title,Class<?> actc) {
+        Bundle bd= new Bundle();
+        bd.putString(BaseFragment.bundleTITLE, title);
+        goToWithInfo(actc, bd);
+    }
 }

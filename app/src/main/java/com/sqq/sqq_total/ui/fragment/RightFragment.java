@@ -37,7 +37,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Administrator on 2016/5/30.
+ * Created by sqq on 2016/5/30.
  */
 public class RightFragment extends BaseFragment {
 

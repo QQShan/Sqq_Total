@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<View style="@style/viewStyle" />-->
+
+    <LinearLayout
+        style="@style/infoItemStyle">
+        <TextView
+            style="@style/infoItemTextStyle"
+            android:id="@+id/sex"
+            android:text="@string/info_sex"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        style="@style/infoItemStyle">
+        <TextView
+            style="@style/infoItemTextStyle"
+            android:id="@+id/age"
+            android:text="@string/info_age"/>
+    </LinearLayout>
+    <LinearLayout
+        style="@style/infoItemStyle">
+        <TextView
+            style="@style/infoItemTextStyle"
+            android:id="@+id/albums"
+            android:text="@string/info_albums"/>
+    </LinearLayout>
+    <LinearLayout
+        style="@style/infoItemStyle">
+        <TextView
+            style="@style/infoItemTextStyle"
+            android:id="@+id/loginout"
+            android:text="@string/info_loginout"/>
+    </LinearLayout>
+</LinearLayout>

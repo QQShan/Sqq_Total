@@ -40,4 +40,15 @@
     <string name="drawer_others">其他功能</string>
     <string name="drawer_share">分享</string>
     <string name="drawer_changeSkin">换主题</string>
+
+    <!--个人信息-->
+    <string name="info_sex">性别</string>
+    <string name="info_age">年龄</string>
+    <string name="info_albums">相册</string>
+    <string name="info_nologin">未登录,请点击此处登录/注册</string>
+    <string name="info_loginout">退出</string>
+
+    <!--上传图片-->
+    <string name="upload_hint">说点什么</string>
+    <string name="upload_limit">60字以内</string>
 </resources>

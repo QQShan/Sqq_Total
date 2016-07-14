@@ -6,8 +6,9 @@ package com.sqq.sqq_total.servicedata;
 public class PicItem {
     long id;                //id
     String title;           //标题
-    String picUrl;          //图片的地址
-    String Url;             //点击之后要跳转去的url
+    String picUrl;          //原图片的地址
+    //String Url;             //点击之后要跳转去的url
+    String smallPicUrl;     //小尺寸的图片地址
     long time;            //数据发布的时间
 
     public long getId() {
@@ -18,11 +19,11 @@ public class PicItem {
         this.id = id;
     }
 
-    public String getDescription() {
+    public String getTitle() {
         return title;
     }
 
-    public void setDescription(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -34,12 +35,12 @@ public class PicItem {
         this.picUrl = picUrl;
     }
 
-    public String getUrl() {
-        return Url;
+    public String getSmallPicUrl() {
+        return smallPicUrl;
     }
 
-    public void setUrl(String url) {
-        Url = url;
+    public void setSmallPicUrl(String smallPicUrl) {
+        this.smallPicUrl = smallPicUrl;
     }
 
     public long getTime() {

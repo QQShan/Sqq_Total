@@ -8,7 +8,7 @@ public class VideoItem {
     String description;     //简短的描述文字
     long time;              //数据发布的时间
     String picUrl;          //图片的地址
-    String Url;             //点击之后要跳转去的url
+    //String Url;             //点击之后要跳转去的url
     int number;             //观看人数，int类型应该够了，不可能有20多亿人看的视频的
 
     public long getId() {
@@ -43,13 +43,13 @@ public class VideoItem {
         this.picUrl = picUrl;
     }
 
-    public String getUrl() {
+    /*public String getUrl() {
         return Url;
     }
 
     public void setUrl(String url) {
         Url = url;
-    }
+    }*/
 
     public int getNumber() {
         return number;

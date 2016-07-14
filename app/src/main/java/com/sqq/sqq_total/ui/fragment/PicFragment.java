@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sqq.sqq_total.R;
@@ -61,7 +63,7 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
         rv = (SqqRecyclerview) rootView.findViewById(R.id.sqqrv);
         rv.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
-        //rv.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
+        //rv.setLayoutManager(new LinearLayoutManager(getSelfActivity(), LinearLayout.VERTICAL, false));
         rv.setItemAnimator(new DefaultItemAnimator());
 
         rv.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -89,7 +91,9 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
                 //tv.setText(des[position]);
                 Log.d("sqqq", "position" + position);
                 ImageView im = holder.getView(R.id.pic);
-                Picasso.with(getSelfActivity()).load(picitem_list.get(position).getPicUrl()).into(im);
+                Picasso.with(getSelfActivity()).load(picitem_list.get(position).getSmallPicUrl())
+                        .into(im);
+
                 //im.setImageResource(R.mipmap.ic_launcher);
                 //下面的功能是计算出图片的显著的颜色赋值给textview，这个功能可以去掉
                 //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), resId[position]);
@@ -126,7 +130,7 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                intentTo(picitem_list.get(position).getDescription(), picitem_list.get(position).getUrl()
+                intentTo(picitem_list.get(position).getTitle()
                         , HeadlineActivity.class);
             }
         });

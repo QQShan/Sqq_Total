@@ -129,7 +129,7 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                intentTo(videoitem_list.get(position).getDescription(), videoitem_list.get(position).getUrl()
+                intentTo(videoitem_list.get(position).getDescription()
                         , HeadlineActivity.class);
             }
         });

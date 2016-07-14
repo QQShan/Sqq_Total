@@ -81,4 +81,32 @@
         <item name="android:textSize">22sp</item>
     </style>
 
+    <style name="viewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:background">@color/colorApGray</item>
+    </style>
+
+    <style name="infoItemStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_margin">3dp</item>
+    </style>
+
+    <style name="infoItemTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:background">@drawable/info_item_select</item>
+    </style>
+
+    <!--<style name="sqqDialogStyle" parent="android:Animation">
+        <item name="@android:windowEnterAnimation">animator</item>
+        <item name="@android:windowExitAnimation">@anim/out</item>
+    </style>-->
 </resources>

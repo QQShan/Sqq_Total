@@ -26,6 +26,7 @@ import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.ui.activity.CaptureActivity;
 import com.sqq.sqq_total.ui.activity.InfoActivity;
 import com.sqq.sqq_total.ui.activity.MainActivity;
+import com.sqq.sqq_total.ui.activity.UploadPicActivity;
 
 /**
  * Created by Administrator on 2016/5/30.
@@ -54,9 +55,9 @@ public class LeftFragment extends BaseFragment implements NavigationView.OnNavig
         mTab.setupWithViewPager(vp);
 
         mTab.getTabAt(0).setText(R.string.t_exlpore);
-        mTab.getTabAt(1).setText(R.string.t_text);
-        mTab.getTabAt(2).setText(R.string.t_pic);
-        mTab.getTabAt(3).setText(R.string.t_video);
+        /*mTab.getTabAt(1).setText(R.string.t_text);*/
+        mTab.getTabAt(1).setText(R.string.t_pic);
+        mTab.getTabAt(2).setText(R.string.t_video);
 
         drawer = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -77,11 +78,11 @@ public class LeftFragment extends BaseFragment implements NavigationView.OnNavig
         public Fragment getItem(int position) {
             if(position==0){
                 return new HeadlineFragment();
-            }else if(position==1){
+            }/*else if(position==1){
                 return new TextFragment();
-            }else if(position==2){
+            }*/else if(position==1){
                 return new PicFragment();
-            }else if(position==3){
+            }else if(position==2){
                 return new VideoFragment();
             }else{
                 return null;
@@ -90,7 +91,8 @@ public class LeftFragment extends BaseFragment implements NavigationView.OnNavig
 
         @Override
         public int getCount() {
-            return 4;
+            //return 4;
+            return 3;
         }
     }
 
@@ -102,7 +104,6 @@ public class LeftFragment extends BaseFragment implements NavigationView.OnNavig
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         /*super.onCreateOptionsMenu(menu, inflater);*/
-        Log.d("sqqqq","onCreateOptionsMenu");
         inflater.inflate(R.menu.menu_leftfragment, menu);
     }
 
@@ -114,6 +115,7 @@ public class LeftFragment extends BaseFragment implements NavigationView.OnNavig
                 goTo(CaptureActivity.class);
                 break;
             case R.id.upload_pic:
+                goTo(UploadPicActivity.class);
                 break;
         }
 

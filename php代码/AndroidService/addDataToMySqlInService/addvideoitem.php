@@ -20,11 +20,6 @@
    <td><input class="input2" type="text" name="picurl" /></td>
    <td align="left" width="180"><span class="sp1">*填写图片地址&nbsp;&nbsp;</span></td> 
  </tr>
- <tr>
-   <td height="28" ><div align="center">跳转的地址:</div></td>
-   <td><input class="input2" type="text" name="url" /></td>
-   <td align="left" width="180"><span class="sp1">*填写跳转的地址</span></td> 
- </tr>
  
  <tr>
  <td height="12"colspan="3"></td>
