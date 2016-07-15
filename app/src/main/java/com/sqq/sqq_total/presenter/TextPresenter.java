@@ -48,7 +48,6 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
     }
 
     TextFmView tfv;
-    Subscription s;
     List<TextItem> list_textitem;
 
     public TextPresenter(TextFmView tfv){
@@ -60,12 +59,11 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
     }
 
     /**
-     * 如果清理会重新加载adapter
      * @return
      */
     public Subscription loadItemData(){
 
-        s = App.getRetrofitInstance().getApiService()
+        Subscription s = App.getRetrofitInstance().getApiService()
                 .getLatestTextItemInfo(AppConfig.textItemCount)
                 /*.map(new Func1<List<TextItem>, List<TextItem>>() {
                     @Override
@@ -106,7 +104,7 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
      * 加载更多
      */
     public Subscription loadMoreItemData(){
-        s = App.getRetrofitInstance().getApiService()
+        Subscription s = App.getRetrofitInstance().getApiService()
                 .getTextItemInfo(AppConfig.textItemCount,list_textitem.get(list_textitem.size()-1).getId())
                 .map(new Func1<List<TextItem>, Boolean>() {
                     @Override
@@ -140,8 +138,5 @@ public class TextPresenter implements NetWorkUtil.NetworkListener {
                 });
         return s;
     }
-    public void unsubscribe(){
-        if(!s.isUnsubscribed())
-            s.unsubscribe();
-    }
+
 }

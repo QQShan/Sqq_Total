@@ -24,6 +24,12 @@
    <td height="28"><div align="center">小图片地址:</div></td>
    <td><input class="input2" type="text" name="smallpicurl" /></td>
    <td align="left" width="180"><span class="sp1">*填写图片地址&nbsp;&nbsp;</span></td> 
+   
+ </tr>
+   <tr>
+   <td height="28"><div align="center">用户id:</div></td>
+   <td><input class="input2" type="text" name="userId" /></td>
+   <td align="left" width="180"><span class="sp1">*用户id&nbsp;&nbsp;</span></td> 
  </tr>
  
  <tr>

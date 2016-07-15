@@ -21,10 +21,11 @@ public class HeadlineActivity extends BaseActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_headline);
-        String url = getIntent().getExtras().getString(BaseFragment.bundleURL);
-        String title = getIntent().getExtras().getString(BaseFragment.bundleTITLE);
+        String url = getIntent().getExtras().getString(BaseFragment.bundleURL,"");
+        String title = getIntent().getExtras().getString(BaseFragment.bundleTITLE,"");
         bl = (BrowserLayout) findViewById(R.id.act_headline_bl);
-        bl.loadUrl(url);
+        if(!url.equals(""))
+            bl.loadUrl(url);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setTitle(title);

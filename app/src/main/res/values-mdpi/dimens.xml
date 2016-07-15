@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--自己用的平板是这个密度的-->
+    <dimen name="app_bar_height">350dp</dimen>
+    <dimen name="act_pic_edittext_height">60dp</dimen>
+</resources>

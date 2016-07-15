@@ -10,6 +10,7 @@ public class VideoItem {
     String picUrl;          //图片的地址
     //String Url;             //点击之后要跳转去的url
     int number;             //观看人数，int类型应该够了，不可能有20多亿人看的视频的
+    String videoUrl;
 
     public long getId() {
         return id;
@@ -19,20 +20,12 @@ public class VideoItem {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getVideoUrl() {
+        return videoUrl;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
     public String getPicUrl() {
@@ -43,19 +36,27 @@ public class VideoItem {
         this.picUrl = picUrl;
     }
 
-    /*public String getUrl() {
-        return Url;
-    }
-
-    public void setUrl(String url) {
-        Url = url;
-    }*/
-
     public int getNumber() {
         return number;
     }
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

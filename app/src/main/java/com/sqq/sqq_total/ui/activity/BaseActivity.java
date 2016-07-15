@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
 import com.sqq.sqq_total.R;
+import com.sqq.sqq_total.ui.fragment.BaseFragment;
 
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -78,6 +79,27 @@ public class BaseActivity extends AppCompatActivity {
                 R.animator.finish_anim,
                 R.animator.finish_noanim
         );
+    }
+
+    protected void intentTo(String title, String url,long id,Class<?> actc) {
+        Bundle bd= new Bundle();
+        bd.putString(BaseFragment.bundleURL, url);
+        bd.putString(BaseFragment.bundleTITLE, title);
+        bd.putLong(BaseFragment.bundleID, id);
+        goToWithInfo(actc, bd);
+    }
+
+    protected void intentTo(String title, String url,Class<?> actc) {
+        Bundle bd= new Bundle();
+        bd.putString(BaseFragment.bundleURL, url);
+        bd.putString(BaseFragment.bundleTITLE, title);
+        goToWithInfo(actc, bd);
+    }
+
+    protected void intentTo(String title,Class<?> actc) {
+        Bundle bd= new Bundle();
+        bd.putString(BaseFragment.bundleTITLE, title);
+        goToWithInfo(actc, bd);
     }
 
     public void startForResult(Intent intent,int requestCode){

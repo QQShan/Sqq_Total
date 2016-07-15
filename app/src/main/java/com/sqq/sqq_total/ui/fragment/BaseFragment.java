@@ -26,6 +26,7 @@ public abstract class BaseFragment extends Fragment {
 
     public static final String bundleURL = "url";
     public static final String bundleTITLE = "title";
+    public static final String bundleID = "id";
     protected ViewGroup rootView;
     protected WeakReference activityRef;
 
@@ -163,6 +164,14 @@ public abstract class BaseFragment extends Fragment {
                 R.animator.in_anim,
                 R.animator.out_anim
         );
+    }
+
+    protected void intentTo(String title, String url,long id,Class<?> actc) {
+        Bundle bd= new Bundle();
+        bd.putString(BaseFragment.bundleURL, url);
+        bd.putString(BaseFragment.bundleTITLE, title);
+        bd.putLong(BaseFragment.bundleID,id);
+        goToWithInfo(actc, bd);
     }
 
     protected void intentTo(String title, String url,Class<?> actc) {

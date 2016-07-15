@@ -51,4 +51,7 @@
     <!--上传图片-->
     <string name="upload_hint">说点什么</string>
     <string name="upload_limit">60字以内</string>
+
+    <!--发表评论-->
+    <string name="comment_publish">发表</string>
 </resources>

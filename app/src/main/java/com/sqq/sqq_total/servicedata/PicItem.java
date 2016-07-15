@@ -10,6 +10,8 @@ public class PicItem {
     //String Url;             //点击之后要跳转去的url
     String smallPicUrl;     //小尺寸的图片地址
     long time;            //数据发布的时间
+    long userId;
+    int scanTimes;
 
     public long getId() {
         return id;
@@ -19,20 +21,28 @@ public class PicItem {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public int getScanTimes() {
+        return scanTimes;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setScanTimes(int scanTimes) {
+        this.scanTimes = scanTimes;
     }
 
-    public String getPicUrl() {
-        return picUrl;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public String getSmallPicUrl() {
@@ -43,11 +53,19 @@ public class PicItem {
         this.smallPicUrl = smallPicUrl;
     }
 
-    public long getTime() {
-        return time;
+    public String getPicUrl() {
+        return picUrl;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

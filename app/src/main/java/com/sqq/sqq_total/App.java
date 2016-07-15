@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.sqq.sqq_total.utils.WriteApk;
 
@@ -23,6 +24,9 @@ public class App extends Application {
         String path= Environment.getExternalStorageDirectory().getPath()+"/app-release.apk";
         File file = new File(path);
         WriteApk.writeApk(file,"你好啊!");
+
+        Log.d("dpi","x:"+getResources().getDisplayMetrics().xdpi
+                +"y:"+getResources().getDisplayMetrics().ydpi);
     }
 
     public static App getAppInstance(){

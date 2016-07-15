@@ -28,4 +28,5 @@ public class AppConfig {
     public static int textItemCount=20;
     public static int picItemCount=20;
     public static int videoItemCount=20;
+    public static int picCommentCount=20;
 }

@@ -1,6 +1,7 @@
 package com.sqq.sqq_total;
 
 import com.sqq.sqq_total.servicedata.HeadlineItem;
+import com.sqq.sqq_total.servicedata.PicCommetItem;
 import com.sqq.sqq_total.servicedata.PicItem;
 import com.sqq.sqq_total.servicedata.SlideviewItem;
 import com.sqq.sqq_total.servicedata.TextItem;
@@ -124,7 +125,34 @@ public interface GetAPi {
     Observable<List<VideoItem>> getVideoItemInfo(@Query("count") int count,@Query("id") long id);
 
 
+    ///////////////////获取评论以及发表评论/////////////
+    /**
+     * 加载最新的count条数据，用于下拉刷新和一开始加载的时候,默认是4
+     * @param count
+     * @return
+     */
+    @Headers("Cache-Control:max-age=10")
+    @GET("pic_comment.php")
+    Observable<List<PicCommetItem>> getLatestPicCommentInfo(@Query("count") int count,@Query("picId") long picId);
 
+    /**
+     * 取小于这个id的count条数据，用于加载更多
+     * @param count
+     * @param id
+     * @return
+     */
+    @Headers("Cache-Control:max-age=3600")
+    @GET("pic_comment.php")
+    Observable<List<PicCommetItem>> getPicCommentInfo(@Query("count") int count,@Query("picId") long picId
+            ,@Query("id") long id);
+
+    @Multipart
+    @POST("publishComment.php")
+    Observable<Void> publishComment(@Part("picId") RequestBody picId,@Part("userId") RequestBody userId,
+                                    @Part("comment") RequestBody comment);
+
+
+    //////////////上传图片
     @Multipart
     @POST("uploadpic.php")
     Observable<Void> uploadPic(@Part MultipartBody.Part pic,@Part("itemTitle") RequestBody title);

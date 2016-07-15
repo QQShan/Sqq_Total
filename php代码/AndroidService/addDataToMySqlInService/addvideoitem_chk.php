@@ -5,8 +5,8 @@ include_once("../db_conn.php");
 list($t1,$t2) = explode(' ',microtime());
 $time=(floatval($t1)+floatval($t2))*1000;
 
-$sqlstrii="insert into tb_videoitem(videoItemDescription,videoItemTime,videoItemPicUrl,videoItemNumber) 
-values('$_POST[description]','$time','$_POST[picurl]',0)";
+$sqlstrii="insert into tb_videoitem(videoItemDescription,videoItemTime,videoItemPicUrl,videoItemNumber,videoItemUrl) 
+values('$_POST[description]','$time','$_POST[picurl]',0,'$_POST[videoUrl]')";
 
 echo $_POST['description'].$time.$_POST['picurl'];
         if( mysql_query($sqlstrii)){

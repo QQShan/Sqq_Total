@@ -25,6 +25,7 @@ import com.sqq.sqq_total.adapter.BaseAdapter;
 import com.sqq.sqq_total.presenter.PicPresenter;
 import com.sqq.sqq_total.servicedata.PicItem;
 import com.sqq.sqq_total.ui.activity.HeadlineActivity;
+import com.sqq.sqq_total.ui.activity.PicActivity;
 import com.sqq.sqq_total.view.LoadingView;
 import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
 import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
@@ -130,8 +131,8 @@ public class PicFragment extends BaseFragment implements PicPresenter.PicFmView{
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                intentTo(picitem_list.get(position).getTitle()
-                        , HeadlineActivity.class);
+                intentTo(picitem_list.get(position).getTitle(), picitem_list.get(position).getPicUrl()
+                        , picitem_list.get(position).getId(), PicActivity.class);
             }
         });
         rv.setAdapter(adapter);
