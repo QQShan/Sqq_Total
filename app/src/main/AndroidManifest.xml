@@ -29,18 +29,22 @@
         </activity>
         <activity android:name=".ui.activity.PicActivity" >
         </activity>
-        <activity android:name=".ui.activity.VideoActivity" >
+        <activity android:name=".ui.activity.UploadPicActivity" >
         </activity>
 
         <activity android:name=".ui.activity.CaptureActivity" >
         </activity>
 
-        <activity android:name=".ui.activity.UploadPicActivity" >
+        <activity android:name=".ui.activity.VideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+            <!--android:windowSoftInputMode="adjustPan|stateHidden"-->
         </activity>
 
         <activity android:name=".ui.activity.InfoActivity"
             android:launchMode="singleTask">
         </activity>
+
+
 
         <receiver android:name=".receiver.NetWorkReceiver">
             <intent-filter>

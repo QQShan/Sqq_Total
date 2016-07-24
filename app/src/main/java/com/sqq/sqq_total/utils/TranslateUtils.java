@@ -20,6 +20,11 @@ public class TranslateUtils {
                 dpVal, con.getResources().getDisplayMetrics());
     }
 
+    public static int dip2px(Context context, float dipValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
+    }
+
     public static float px2sp(float dpVal ,Context con){
         float fontSize = con.getResources().getDisplayMetrics().scaledDensity;
         return dpVal/fontSize+0.5f;

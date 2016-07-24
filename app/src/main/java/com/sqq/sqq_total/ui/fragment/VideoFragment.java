@@ -1,43 +1,27 @@
 package com.sqq.sqq_total.ui.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.adapter.BaseAdapter;
 import com.sqq.sqq_total.presenter.VideoPresenter;
 import com.sqq.sqq_total.servicedata.VideoItem;
-import com.sqq.sqq_total.ui.activity.HeadlineActivity;
+import com.sqq.sqq_total.ui.activity.VideoActivity;
 import com.sqq.sqq_total.utils.NumberUtils;
 import com.sqq.sqq_total.utils.TimerUtils;
-import com.sqq.sqq_total.view.LoadingView;
-import com.sqq.sqq_total.view.SlideView;
 import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
 import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
 import com.sqq.sqq_total.viewholder.BaseViewHolder;
 import com.squareup.picasso.Picasso;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -129,8 +113,9 @@ public class VideoFragment extends BaseFragment implements VideoPresenter.VideoF
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                intentTo(videoitem_list.get(position).getDescription()
-                        , HeadlineActivity.class);
+                intentTo(videoitem_list.get(position).getDescription(),
+                        videoitem_list.get(position).getVideoUrl(),
+                        videoitem_list.get(position).getId(), VideoActivity.class);
             }
         });
 

@@ -25,6 +25,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
 
 /**
  * Created by sqq on 2016/6/16.
@@ -78,7 +80,6 @@ public class HeadlinePresenter implements NetWorkUtil.NetworkListener {
      * @return
      */
     public Subscription loadItemData(){
-
         s = Observable
                 .zip(App.getRetrofitInstance().getApiService()
                                 .getLatestItemInfo(AppConfig.headlineItemCount),

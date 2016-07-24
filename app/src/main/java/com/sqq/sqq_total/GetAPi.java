@@ -5,6 +5,7 @@ import com.sqq.sqq_total.servicedata.PicCommetItem;
 import com.sqq.sqq_total.servicedata.PicItem;
 import com.sqq.sqq_total.servicedata.SlideviewItem;
 import com.sqq.sqq_total.servicedata.TextItem;
+import com.sqq.sqq_total.servicedata.VideoCommentItem;
 import com.sqq.sqq_total.servicedata.VideoItem;
 
 import java.util.List;
@@ -126,6 +127,7 @@ public interface GetAPi {
 
 
     ///////////////////获取评论以及发表评论/////////////
+    //////////////图片的评论
     /**
      * 加载最新的count条数据，用于下拉刷新和一开始加载的时候,默认是4
      * @param count
@@ -149,6 +151,32 @@ public interface GetAPi {
     @Multipart
     @POST("publishComment.php")
     Observable<Void> publishComment(@Part("picId") RequestBody picId,@Part("userId") RequestBody userId,
+                                    @Part("comment") RequestBody comment);
+
+    //////////////视频的评论
+    /**
+     * 加载最新的count条数据，用于下拉刷新和一开始加载的时候,默认是4
+     * @param count
+     * @return
+     */
+    @Headers("Cache-Control:max-age=10")
+    @GET("video_comment.php")
+    Observable<List<VideoCommentItem>> getLatestVideoCommentItemInfo(@Query("count") int count,@Query("videoId") long videoId);
+
+    /**
+     * 取小于这个id的count条数据，用于加载更多
+     * @param count
+     * @param id
+     * @return
+     */
+    @Headers("Cache-Control:max-age=3600")
+    @GET("video_comment.php")
+    Observable<List<VideoCommentItem>> getVideoCommentItemInfo(@Query("count") int count,@Query("videoId") long videoId
+            ,@Query("id") long id);
+
+    @Multipart
+    @POST("publishVideoComment.php")
+    Observable<Void> publishVideoComment(@Part("videoId") RequestBody videoId,@Part("userId") RequestBody userId,
                                     @Part("comment") RequestBody comment);
 
 

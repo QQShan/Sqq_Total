@@ -24,6 +24,7 @@ import java.util.Vector;
 
 /**
  * Created by sqq on 2016/7/12.
+ * 扫描二维码
  */
 public class CaptureActivity extends BaseCaptureActiviy implements SurfaceHolder.Callback{
 

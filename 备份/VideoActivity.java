@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -14,31 +13,43 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 import com.sqq.sqq_total.R;
+import com.sqq.sqq_total.adapter.BaseAdapter;
 import com.sqq.sqq_total.presenter.VideoActivityPresentr;
+import com.sqq.sqq_total.servicedata.VideoCommentItem;
 import com.sqq.sqq_total.ui.fragment.BaseFragment;
 import com.sqq.sqq_total.utils.DestinyUtils;
 import com.sqq.sqq_total.utils.TimerUtils;
 import com.sqq.sqq_total.utils.TranslateUtils;
+import com.sqq.sqq_total.view.pulltorefresh.OnLoadListener;
+import com.sqq.sqq_total.view.pulltorefresh.SqqRecyclerview;
+import com.sqq.sqq_total.viewholder.BaseViewHolder;
 import com.sqq.sqqvideo.media.IjkVideoView;
 import com.sqq.sqqvideo.setting.Settings;
+
+import java.util.List;
+
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
@@ -50,6 +61,8 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 public class VideoActivity extends BaseActivity  implements View.OnClickListener,
         SeekBar.OnSeekBarChangeListener,VideoActivityPresentr.VideoPlayerView {
 
+    SqqRecyclerview rv;
+    BaseAdapter adapter;
 
     private final String TAG = "VideoActivity";
     Settings mSettings;
@@ -58,6 +71,7 @@ public class VideoActivity extends BaseActivity  implements View.OnClickListener
     private RelativeLayout rlLoadView,voice_light;
     private LinearLayout lyFloor;
     private LinearLayout lySystemBar;
+    private LinearLayout bottomEdit;
     private IjkVideoView videoView;
     private TextView tvLoadmsg, tvTitle, tvTime, tvCurtime;
     private TextView tv_voice_light;
@@ -111,88 +125,14 @@ public class VideoActivity extends BaseActivity  implements View.OnClickListener
         setContentView(R.layout.activity_video);
 
         long id = getIntent().getExtras().getLong(BaseFragment.bundleID, -1);
+        /*String title = getIntent().getExtras().getString(BaseFragment.bundleTITLE,"");
+        String url = getIntent().getExtras().getString(BaseFragment.bundleURL,"");*/
 
-        vpp = new VideoActivityPresentr(this);
+        vpp = new VideoActivityPresentr(this,id);
         vpp.initSystembar(this);
 
-        String title = getIntent().getExtras().getString(BaseFragment.bundleTITLE, "");
-        String url = getIntent().getExtras().getString(BaseFragment.bundleURL, "");
+        startGetData();
 
-        title_view = (RelativeLayout) findViewById(R.id.rl_tt);
-        title_view.setOnClickListener(this);
-        flVideoView = (RelativeLayout) findViewById(R.id.rl_allview);
-        rlLoadView = (RelativeLayout) findViewById(R.id.load_view);
-        voice_light = (RelativeLayout) findViewById(R.id.voice_light);
-        ivBack = (ImageView) findViewById(R.id.iv_back);
-        ivBack.setOnClickListener(this);
-        ivFullScreen = (ImageView) findViewById(R.id.iv_fullscreen);
-        ivFullScreen.setOnClickListener(this);
-        iv_start_pause = (ImageView) findViewById(R.id.iv_start_pause);
-        iv_start_pause.setOnClickListener(this);
-        img_voice_light = (ImageView) findViewById(R.id.img_voice_light);
-
-        lyFloor = (LinearLayout) findViewById(R.id.ly_floor);
-        // init player
-        IjkMediaPlayer.loadLibrariesOnce(null);
-        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
-
-        videoView = (IjkVideoView) findViewById(R.id.videoview);
-
-        tvLoadmsg = (TextView) findViewById(R.id.tv_tip);
-        tv_voice_light = (TextView) findViewById(R.id.tv_voice_light);
-        tvTitle = (TextView) findViewById(R.id.tv_title);
-        tvTitle.setText(title);
-        tvTime = (TextView) findViewById(R.id.tv_time);
-        tvCurtime = (TextView) findViewById(R.id.tv_curtime);
-        tv_forward = (TextView) findViewById(R.id.tv_forward);
-
-        seekBar = (SeekBar) findViewById(R.id.sb_time);
-        seekBar.setMax(1000);
-        seekBar.setOnSeekBarChangeListener(this);
-
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-
-        gestureDetector = new GestureDetector(this, new PlayerGestureListener());
-        flVideoView.setClickable(true);
-        flVideoView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (gestureDetector.onTouchEvent(event))
-                    return true;
-
-                // 处理手势结束
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_UP:
-                        endGesture();
-                        break;
-                }
-                return false;
-            }
-        });
-        initVideo(url);
-
-        TextView tvBottom = (TextView) findViewById(R.id.tv_bottom);
-        String desc = getString(R.string.video_tvdesc,id,title);
-        tvBottom.setText(desc);
-
-        TextView tvTip = (TextView) findViewById(R.id.tv_bottom_tip);
-        /*内容如下:详情请看免责声明*/
-        String tip = getString(R.string.video_tv_tip);
-        SpannableString spanStr = new SpannableString(tip);
-        spanStr.setSpan(new UnderlineSpan(),4,8, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spanStr.setSpan(new ClickableSpan() {
-            @Override
-            public void onClick(View widget) {
-                //点击了免责声明
-                Log.d(TAG,"点击了免责声明");
-                finishActivity();
-            }
-        },4,8, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spanStr.setSpan(new ForegroundColorSpan(Color.RED)
-        ,4,8,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvTip.setText(spanStr);
-        tvTip.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     public void initVideo(final String path) {
@@ -320,6 +260,18 @@ public class VideoActivity extends BaseActivity  implements View.OnClickListener
                     updatePausePlay();
                 }
                 break;
+            case R.id.publishBt:
+                EditText et = (EditText) findViewById(R.id.comment);
+                if(TextUtils.isEmpty(et.getText())){
+                    return;
+                }
+                vpp.publishComment(et.getText().toString());
+                et.setText("");
+                et.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+                break;
         }
     }
 
@@ -337,7 +289,7 @@ public class VideoActivity extends BaseActivity  implements View.OnClickListener
 
     @Override
     public void onBackPressed() {
-        Log.d("sqqq", "backpress");
+        Log.d("sqqq","backpress");
         if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)// 横屏
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -365,6 +317,7 @@ public class VideoActivity extends BaseActivity  implements View.OnClickListener
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //bottomEdit.setVisibility(View.GONE);
             //切换到了横屏
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) flVideoView.getLayoutParams();
             lp.height = DestinyUtils.getScreenHeight(this);
@@ -372,6 +325,7 @@ public class VideoActivity extends BaseActivity  implements View.OnClickListener
             flVideoView.setLayoutParams(lp);
             ivFullScreen.setImageResource(R.drawable.icon_live_cancel_fullscreen_normal);
         } else {
+            //bottomEdit.setVisibility(View.VISIBLE);
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) flVideoView.getLayoutParams();
             lp.height = DestinyUtils.getScreenWidth(this) * 9 / 16;
             lp.width = DestinyUtils.getScreenWidth(this);
@@ -530,6 +484,158 @@ public class VideoActivity extends BaseActivity  implements View.OnClickListener
             lySystemBar = (LinearLayout) findViewById(R.id.ly_system_bar);
         }
         lySystemBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void startGetData() {
+        addSubscription(vpp.loadItemData());
+        rv.setRefreshing(true);
+    }
+
+    @Override
+    public void initViews(final List<VideoCommentItem> list) {
+        String title = getIntent().getExtras().getString(BaseFragment.bundleTITLE,"");
+        String url = getIntent().getExtras().getString(BaseFragment.bundleURL,"");
+
+        title_view = (RelativeLayout) findViewById(R.id.rl_tt);
+        title_view.setOnClickListener(this);
+        flVideoView = (RelativeLayout) findViewById(R.id.rl_allview);
+        rlLoadView = (RelativeLayout) findViewById(R.id.load_view);
+        voice_light = (RelativeLayout) findViewById(R.id.voice_light);
+        ivBack = (ImageView) findViewById(R.id.iv_back);
+        ivBack.setOnClickListener(this);
+        ivFullScreen = (ImageView) findViewById(R.id.iv_fullscreen);
+        ivFullScreen.setOnClickListener(this);
+        iv_start_pause = (ImageView) findViewById(R.id.iv_start_pause);
+        iv_start_pause.setOnClickListener(this);
+        img_voice_light = (ImageView) findViewById(R.id.img_voice_light);
+
+        lyFloor = (LinearLayout) findViewById(R.id.ly_floor);
+        // init player
+        IjkMediaPlayer.loadLibrariesOnce(null);
+        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
+
+        videoView = (IjkVideoView) findViewById(R.id.videoview);
+
+        tvLoadmsg = (TextView) findViewById(R.id.tv_tip);
+        tv_voice_light = (TextView) findViewById(R.id.tv_voice_light);
+        tvTitle = (TextView) findViewById(R.id.tv_title);
+        tvTitle.setText(title);
+        tvTime = (TextView) findViewById(R.id.tv_time);
+        tvCurtime = (TextView) findViewById(R.id.tv_curtime);
+        tv_forward = (TextView) findViewById(R.id.tv_forward);
+
+        seekBar = (SeekBar) findViewById(R.id.sb_time);
+        seekBar.setMax(1000);
+        seekBar.setOnSeekBarChangeListener(this);
+
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
+        gestureDetector = new GestureDetector(this,new PlayerGestureListener());
+        flVideoView.setClickable(true);
+        flVideoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (gestureDetector.onTouchEvent(event))
+                    return true;
+
+                // 处理手势结束
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        endGesture();
+                        break;
+                }
+                return false;
+            }
+        });
+        initVideo(url);
+
+        //bottomEdit = (LinearLayout) findViewById(R.id.bottomEdit);
+
+        Button bt = (Button) findViewById(R.id.publishBt);
+        bt.setOnClickListener(this);
+
+        rv = (SqqRecyclerview) findViewById(R.id.sqqrv);
+        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
+        rv.setItemAnimator(new DefaultItemAnimator());
+
+        rv.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                addSubscription(vpp.loadItemData());
+            }
+        });
+        rv.setOnLoadListener(new OnLoadListener() {
+            @Override
+            public void OnLoadListener() {
+                addSubscription(vpp.loadMoreItemData());
+            }
+        });
+
+        adapter = new BaseAdapter() {
+
+            @Override
+            public int getItemCount() {
+                return list.size();
+            }
+
+            @Override
+            protected void onBindView(BaseViewHolder holder, int position) {
+                final TextView tv_desc = holder.getView(R.id.ti_description);
+                tv_desc.setText(list.get(position).getComment());
+                final TextView tv_time = holder.getView(R.id.ti_time);
+                tv_time.setText(TimerUtils.getTimeUpToNow(list.get(position).getTime(), VideoActivity.this));
+            }
+
+            @Override
+            protected int getLayoutID() {
+                return R.layout.textitem;
+            }
+        };
+        adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                /*intentTo(list.get(position).getTitle(), list.get(position).getUrl()
+                        , HeadlineActivity.class);*/
+            }
+        });
+        rv.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void getDataError(String info) {
+
+    }
+
+    @Override
+    public void refresh(boolean isRefreshing) {
+        adapter.notifyDataSetChanged();
+        rv.setRefreshing(isRefreshing);
+    }
+
+    @Override
+    public void finishLoad(boolean hasData) {
+        if(hasData){
+            adapter.notifyDataSetChanged();
+        }
+        rv.endLoadRefresh();
+    }
+
+    @Override
+    public void loadError() {
+        rv.loadError();
+    }
+
+    @Override
+    public void publishSuccess() {
+        addSubscription(vpp.loadItemData());
+    }
+
+    @Override
+    public void publishError() {
+
     }
 
 
