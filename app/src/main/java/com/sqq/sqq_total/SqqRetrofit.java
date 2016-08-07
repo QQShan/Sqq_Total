@@ -42,7 +42,7 @@ public class SqqRetrofit {
                 .connectTimeout(15, TimeUnit.SECONDS)
                 //.addNetworkInterceptor(mTokenInterceptor)
                 //.authenticator(mAuthenticator)
-                .addNetworkInterceptor(cacheInterceptor)
+                //.addNetworkInterceptor(cacheInterceptor)
                 .addInterceptor(cacheInterceptor)
                 .cache(cache)
                 .build();
