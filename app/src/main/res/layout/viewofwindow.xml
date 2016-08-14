@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorApGray">
+    
+    <TextView 
+        android:id="@+id/w_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/view_of_window_or"
+        android:textSize="@dimen/view_of_window_textSize"
+        android:gravity="center"/>
+
+    <Button 
+        android:id="@+id/bt_reg"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/view_of_window_textSize"
+        android:text="@string/view_of_window_register"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/bt_log"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/view_of_window_textSize"
+        android:text="@string/view_of_window_login"
+        android:gravity="center" />
+</LinearLayout>

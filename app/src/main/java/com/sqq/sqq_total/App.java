@@ -1,11 +1,13 @@
 package com.sqq.sqq_total;
 
 import android.app.Application;
+import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.sqq.sqq_total.databasehelper.DbCore;
 import com.sqq.sqq_total.utils.WriteApk;
 
 import java.io.File;
@@ -21,12 +23,19 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         appInstance = this;
+
+        Intent intent = new Intent(App.this,TcpService.class);
+        startService(intent);
+
+        DbCore.init(this);
+
         String path= Environment.getExternalStorageDirectory().getPath()+"/app-release.apk";
         File file = new File(path);
         WriteApk.writeApk(file,"你好啊!");
 
-        Log.d("dpi","x:"+getResources().getDisplayMetrics().xdpi
-                +"y:"+getResources().getDisplayMetrics().ydpi);
+        Log.d("dpi", "x:" + getResources().getDisplayMetrics().xdpi
+                + "y:" + getResources().getDisplayMetrics().ydpi);
+
     }
 
     public static App getAppInstance(){

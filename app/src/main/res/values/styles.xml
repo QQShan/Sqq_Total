@@ -105,8 +105,8 @@
         <item name="android:background">@drawable/info_item_select</item>
     </style>
 
-    <!--<style name="sqqDialogStyle" parent="android:Animation">
-        <item name="@android:windowEnterAnimation">animator</item>
-        <item name="@android:windowExitAnimation">@anim/out</item>
-    </style>-->
+    <style name="sqqDialogStyle" parent="android:Animation">
+        <item name="@android:windowEnterAnimation">@animator/in</item>
+        <item name="@android:windowExitAnimation">@animator/out</item>
+    </style>
 </resources>

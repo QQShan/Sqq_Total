@@ -44,6 +44,12 @@
             android:launchMode="singleTask">
         </activity>
 
+        <activity android:name=".ui.activity.LoginActivity" >
+        </activity>
+
+        <activity android:name=".ui.activity.RegisterActivity" >
+        </activity>
+
 
 
         <receiver android:name=".receiver.NetWorkReceiver">
@@ -51,6 +57,8 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <service android:name=".TcpService"/>
     </application>
 
 </manifest>

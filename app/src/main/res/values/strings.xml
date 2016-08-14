@@ -9,5 +9,6 @@
     <string name="prefer_textItemId">textItemId</string>            //已经加载的内容最后一条的id
     <string name="prefer_videoItemId">videoItemId</string>          //已经加载的内容最后一条的id
 
-    <string name="prefer_token">token</string>          //登陆之后从服务器返回的token
+    <string name="prefer_token">token</string>          //登录之后的token
+    <string name="prefer_userId">userid</string>
 </resources>

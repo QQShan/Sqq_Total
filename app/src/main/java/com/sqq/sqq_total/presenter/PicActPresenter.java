@@ -1,10 +1,14 @@
 package com.sqq.sqq_total.presenter;
 
+import android.content.Context;
+
 import com.sqq.sqq_total.App;
 import com.sqq.sqq_total.AppConfig;
+import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.servicedata.PicCommetItem;
 import com.sqq.sqq_total.servicedata.PicItem;
 import com.sqq.sqq_total.servicedata.TextItem;
+import com.sqq.sqq_total.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,11 +122,12 @@ public class PicActPresenter {
     /**
      * 发布评论
      */
-    public Subscription publishComment(String comment){
-        //long userId = new Long(null);
+    public Subscription publishComment(String comment,Context con){
+        String userId = ""+ PreferenceUtils.getLong(con, R.string.prefer_userId, -1L);
+
         Subscription s =App.getRetrofitInstance().getApiService()
                 .publishComment(RequestBody.create(null, picId + "")
-                        , RequestBody.create(null, "")
+                        , RequestBody.create(null, userId)
                         , RequestBody.create(null, comment))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -8,7 +8,9 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.sqq.sqq_total.App;
+import com.sqq.sqq_total.R;
 import com.sqq.sqq_total.utils.CacheUtils;
+import com.sqq.sqq_total.utils.PreferenceUtils;
 import com.sqq.sqq_total.utils.TimerUtils;
 
 import java.io.File;
@@ -90,11 +92,14 @@ public class UploadPicPresenter {
         /*File file = new File(CacheUtils.getAndroidDataPath(con)+"/1.jpg");
         Log.d("sqqqqq",CacheUtils.getAndroidDataPath(con)+"/1.jpg");*/
         File file = new File(picPath);
-        RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/jpeg"),file);
-        MultipartBody.Part pic = MultipartBody.Part.createFormData("uploadfile",picName,photoRequestBody);
+        RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
+        MultipartBody.Part pic = MultipartBody.Part.createFormData("uploadfile", picName, photoRequestBody);
+
+        String userId = ""+PreferenceUtils.getLong(con, R.string.prefer_userId,-1L);
 
         Subscription s = App.getRetrofitInstance().getApiService()
-                .uploadPic(pic, RequestBody.create(null, title))
+                .uploadPic(pic, RequestBody.create(null, title)
+                        , RequestBody.create(null, userId))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Void>() {
@@ -105,6 +110,7 @@ public class UploadPicPresenter {
 
                     @Override
                     public void onError(Throwable throwable) {
+                        Log.d("sqqq","上传失败"+throwable.toString());
                         upView.uploadfail();
                     }
 

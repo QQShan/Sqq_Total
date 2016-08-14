@@ -3,4 +3,6 @@
     <!--自己用的平板是这个密度的-->
     <dimen name="app_bar_height">350dp</dimen>
     <dimen name="act_pic_edittext_height">60dp</dimen>
+
+    <dimen name="view_of_window_textSize">30sp</dimen>
 </resources>

@@ -184,7 +184,7 @@ public class PicActivity extends BaseActivity implements PicActPresenter.PicActV
                 if(TextUtils.isEmpty(et.getText())){
                     return;
                 }
-                pap.publishComment(et.getText().toString());
+                pap.publishComment(et.getText().toString(),this);
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                 et.setText("");

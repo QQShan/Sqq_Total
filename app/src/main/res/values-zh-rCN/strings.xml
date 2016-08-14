@@ -33,6 +33,7 @@
 
     <!--drawer的文字-->
     <string name="drawer_nologin">未登录</string>
+    <string name="drawer_logined">已登录</string>
     <string name="drawer_login">点击头像登录</string>
     <string name="drawer_main_func">主功能</string>
     <string name="drawer_main">主页</string>
@@ -47,6 +48,8 @@
     <string name="info_albums">相册</string>
     <string name="info_nologin">未登录,请点击此处登录/注册</string>
     <string name="info_loginout">退出</string>
+    <string name="info_man">男</string>
+    <string name="info_woman">女</string>
 
     <!--上传图片-->
     <string name="upload_hint">说点什么</string>
@@ -58,4 +61,27 @@
     <!--视频-->
     <string name="video_tvdesc">欢迎观看，这是编号为%1$s的视频，描述如下:%2$s</string>
     <string name="video_tv_tip">详情请看免责声明</string>
+
+    <!--底部弹窗 个人信息页面-->
+    <string name="view_of_window_or">登录或者注册</string>
+    <string name="view_of_window_login">登录</string>
+    <string name="view_of_window_register">注册</string>
+
+    <!--登录页-->
+    <string name="log_userid">用户名</string>
+    <string name="log_password">密码</string>
+    <string name="log_label">登录</string>
+    <string name="log_userid_error">用户名错误</string>
+    <string name="log_password_error">密码错误</string>
+    <string name="log_logining">登录中。。。</string>
+    <string name="log_loginerror">用户名或密码错误</string>
+    <string name="log_login_network_error">无法连接到服务器</string>
+
+    <!--注册页-->
+    <string name="reg_label">注册</string>
+    <string name="reg_reging">注册中。。。</string>
+    <string name="reg_regerror">注册失败，用户名或者密码已经存在</string>
+
+    <!--弹窗-->
+    <string name="dialog_tip">提示</string>
 </resources>

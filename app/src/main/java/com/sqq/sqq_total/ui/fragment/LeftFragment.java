@@ -21,12 +21,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.sqq.sqq_total.R;
+import com.sqq.sqq_total.databaseDao.User;
+import com.sqq.sqq_total.databasehelper.DbUtil;
 import com.sqq.sqq_total.ui.activity.CaptureActivity;
 import com.sqq.sqq_total.ui.activity.InfoActivity;
+import com.sqq.sqq_total.ui.activity.LoginActivity;
 import com.sqq.sqq_total.ui.activity.MainActivity;
 import com.sqq.sqq_total.ui.activity.UploadPicActivity;
+import com.sqq.sqq_total.utils.PreferenceUtils;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/5/30.
@@ -67,6 +76,45 @@ public class LeftFragment extends BaseFragment implements NavigationView.OnNavig
 
         navigationView = (NavigationView) rootView.findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ImageView iv = (ImageView) rootView.findViewById(R.id.imageView);
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(PreferenceUtils.getString(getSelfActivity(), R.string.prefer_token, "").equals(""))
+                    //没有登录
+                    goTo(LoginActivity.class);
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String token = PreferenceUtils.getString(getSelfActivity(), R.string.prefer_token, "");
+        if(!token.equals("")){
+            //说明已经登录了
+            long userId = PreferenceUtils.getLong(getSelfActivity(),R.string.prefer_userId,-1L);
+            List<User> ret =  DbUtil.getUserService().query("where USER_ID=? limit 1",userId+"");
+            if(ret!=null && ret.size()==1){
+                TextView textView = (TextView) rootView.findViewById(R.id.logif);
+                textView.setText(getString(R.string.drawer_logined));
+                TextView textView2 = (TextView) rootView.findViewById(R.id.textView);
+                textView2.setText(ret.get(0).getNickName());
+                ImageView iv = (ImageView) rootView.findViewById(R.id.imageView);
+                if(!ret.get(0).getPicUrl().equals("")){
+                    Picasso.with(getContext()).load(ret.get(0).getPicUrl()).into(iv);
+                }
+            }
+        }else{
+            TextView textView = (TextView) rootView.findViewById(R.id.logif);
+            textView.setText(getString(R.string.drawer_nologin));
+            TextView textView2 = (TextView) rootView.findViewById(R.id.textView);
+            textView2.setText(getString(R.string.drawer_login));
+            ImageView iv = (ImageView) rootView.findViewById(R.id.imageView);
+            iv.setImageResource(R.drawable.main_index_my_normal);
+        }
     }
 
     private class MyViewPageAdapter extends FragmentStatePagerAdapter {

@@ -183,7 +183,8 @@ public interface GetAPi {
     //////////////上传图片
     @Multipart
     @POST("uploadpic.php")
-    Observable<Void> uploadPic(@Part MultipartBody.Part pic,@Part("itemTitle") RequestBody title);
+    Observable<Void> uploadPic(@Part MultipartBody.Part pic,@Part("itemTitle") RequestBody title
+    ,@Part("userId") RequestBody userId);
 
 
     /**
