@@ -46,7 +46,7 @@ public class NioClient implements Runnable {
     private boolean clientClosed;
     PoolManager poolManager;
 
-    public NioClient(NioClient.Builder builder) {
+    private NioClient(NioClient.Builder builder) {
         connectTimeout = builder.timeout;
         connectHost = builder.host;
         connectTcpPort = builder.tcpPort;

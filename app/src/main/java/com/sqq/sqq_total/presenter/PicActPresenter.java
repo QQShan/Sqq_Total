@@ -1,6 +1,7 @@
 package com.sqq.sqq_total.presenter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.sqq.sqq_total.App;
 import com.sqq.sqq_total.AppConfig;
@@ -125,6 +126,7 @@ public class PicActPresenter {
     public Subscription publishComment(String comment,Context con){
         String userId = ""+ PreferenceUtils.getLong(con, R.string.prefer_userId, -1L);
 
+        Log.d("sqqqq","userId"+userId+" comment"+comment+" picId"+picId);
         Subscription s =App.getRetrofitInstance().getApiService()
                 .publishComment(RequestBody.create(null, picId + "")
                         , RequestBody.create(null, userId)

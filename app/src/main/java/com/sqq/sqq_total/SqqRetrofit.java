@@ -14,11 +14,16 @@ import okhttp3.Authenticator;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.Route;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okio.BufferedSink;
+import okio.GzipSink;
+import okio.Okio;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -66,7 +71,7 @@ public class SqqRetrofit {
         public Response intercept(Chain chain) throws IOException {
             //chain.proceed(oRequest);    //存在于所有http工作发生的地方，生成满足请求的响应
             Request oRequest = chain.request();
-            Log.d("sqqq","请求报文"+oRequest.headers().toString());
+            Log.d("sqqq", "请求报文" + oRequest.headers().toString());
             if(UserConfig.Token.equals("")||oRequest.header(AppConfig.Authorization)!=null){
                 //如果请求中已经带有Authorization或者还未登录（登录之后才有token）
                 Response response = chain.proceed(oRequest);
@@ -102,6 +107,14 @@ public class SqqRetrofit {
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
 
+            //这里的gzip就先不开启，服务器这边不知道怎么直接解析到post数组中
+            /*if(request.body()!=null&&request.header("Content-Encoding")==null)
+            //添加gzip
+            request = request.newBuilder()
+                    .header("Content-Encoding", "gzip")
+                    .method(request.method(),gzip(request.body()))
+                    .build();*/
+
             if (!NetWorkUtil.getInstance().isConnected()) {
                 //如果没有网络
                 request = request.newBuilder()
@@ -126,6 +139,27 @@ public class SqqRetrofit {
             return response;
         }
     };
+
+    private RequestBody gzip(final RequestBody body){
+        return new RequestBody() {
+            @Override
+            public MediaType contentType() {
+                return body.contentType();
+            }
+
+            @Override
+            public long contentLength() throws IOException {
+                return -1;
+            }
+
+            @Override
+            public void writeTo(BufferedSink bufferedSink) throws IOException {
+                BufferedSink gzipSink = Okio.buffer(new GzipSink(bufferedSink));
+                body.writeTo(gzipSink);
+                gzipSink.close();
+            }
+        };
+    }
 
     public GetAPi getApiService() {
         return getAPi;

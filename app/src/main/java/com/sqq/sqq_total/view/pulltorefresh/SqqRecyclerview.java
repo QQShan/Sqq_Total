@@ -115,6 +115,7 @@ public class SqqRecyclerview extends LinearLayout {
                         && footerView.isShown()){
                     footerView.setVisibility(View.GONE);
                 }
+
             }
         });
     }

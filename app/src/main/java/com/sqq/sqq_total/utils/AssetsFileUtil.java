@@ -13,7 +13,7 @@ import java.io.OutputStream;
  * Created by sqq on 2016/7/15.
  * 复制assets下的文件到sd卡下
  */
-public class SqqFileUtil {
+public class AssetsFileUtil {
 
     public static void copyFromAssets(Context con){
         String dir = con.getExternalCacheDir()+"/stafflocker";
