@@ -1,1 +1,1 @@
-include ':app', ':qrhelper'
+include ':app', ':qrhelper', ':sqqvideo'

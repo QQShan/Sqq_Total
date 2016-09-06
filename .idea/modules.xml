@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Sqq_Total.iml" filepath="$PROJECT_DIR$/Sqq_Total.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/qrhelper/qrhelper.iml" filepath="$PROJECT_DIR$/qrhelper/qrhelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sqqvideo/sqqvideo.iml" filepath="$PROJECT_DIR$/sqqvideo/sqqvideo.iml" />
     </modules>
   </component>
 </project>
