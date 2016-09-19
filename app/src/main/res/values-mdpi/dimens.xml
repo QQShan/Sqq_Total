@@ -5,4 +5,9 @@
     <dimen name="act_pic_edittext_height">60dp</dimen>
 
     <dimen name="view_of_window_textSize">30sp</dimen>
+
+    <!--headlineitem-->
+    <dimen name="title_textSize">20sp</dimen>
+    <dimen name="descript_textSize">15sp</dimen>
+    <dimen name="time_textSize">14sp</dimen>
 </resources>

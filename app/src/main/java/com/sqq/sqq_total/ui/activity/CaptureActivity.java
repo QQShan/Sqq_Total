@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -131,6 +132,7 @@ public class CaptureActivity extends BaseCaptureActiviy implements SurfaceHolder
     public void handleDecode(Result result, Bitmap barcode) {
         inactivityTimer.onActivity();
         String resultString = result.getText();
+        Log.d("sqqqq",resultString);
         //FIXME
         if (resultString.equals("")) {
             Toast.makeText(CaptureActivity.this, "Scan failed!", Toast.LENGTH_SHORT).show();
@@ -144,6 +146,7 @@ public class CaptureActivity extends BaseCaptureActiviy implements SurfaceHolder
             CaptureActivity.this.finish();
             resultIntent.setClass(CaptureActivity.this, MainActivity.class);
             startActivity(resultIntent);
+
         }
     }
 

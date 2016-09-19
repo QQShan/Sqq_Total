@@ -16,6 +16,7 @@
             android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
             app:theme="@style/AppTheme.AppBarOverlay"
             app:layout_scrollFlags="scroll|enterAlways">
+            <!--这一句改文字大小app:titleTextAppearance="@style/tablayoutText"-->
 
         </android.support.v7.widget.Toolbar>
 

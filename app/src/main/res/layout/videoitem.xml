@@ -30,11 +30,11 @@
         <TextView
             android:id="@+id/videoitem_desc"
             android:layout_width="match_parent"
-            android:layout_height="40dip"
-            android:padding="5dp"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
             tools:text="图片描述"
             android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textSize="@dimen/descript_textSize" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -45,21 +45,21 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignBaseline="@+id/videoitem_counts"
                 android:gravity="center_vertical"
-                android:padding="5dp"
+                android:padding="3dp"
                 tools:text="图片描述"
                 android:textColor="@color/colorApGray"
-                android:textSize="16sp" />
+                android:textSize="@dimen/descript_textSize" />
             <TextView
                 android:id="@+id/videoitem_counts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:gravity="center_vertical"
-                android:drawableLeft="@mipmap/ic_launcher"
-                android:padding="5dp"
+                android:drawableLeft="@drawable/eyes"
+                android:padding="3dp"
                 tools:text="图片描述"
                 android:textColor="@color/colorApGray"
-                android:textSize="16sp" />
+                android:textSize="@dimen/descript_textSize" />
         </RelativeLayout>
 
     </LinearLayout>

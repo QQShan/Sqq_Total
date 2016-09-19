@@ -52,6 +52,7 @@ public class LeftFragment extends BaseFragment implements NavigationView.OnNavig
     protected void ifNotNUll(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_containleft, container, false);
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
         ((AppCompatActivity)getSelfActivity()).setSupportActionBar(toolbar);
 
         vp = (ViewPager) rootView.findViewById(R.id.left_viewpager);

@@ -18,7 +18,7 @@ public class userBeen {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(@Type.dataType String type) {
         this.type = type;
     }
 

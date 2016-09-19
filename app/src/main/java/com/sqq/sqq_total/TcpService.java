@@ -21,20 +21,24 @@ public class TcpService extends Service{
      */
     static int port = 13448;
 
-    static String ip = "10.0.3.114";
+    //static String ip = "10.0.3.114";
+    static String ip = "10.0.6.114";
 
     private static NioClient client;
 
     public static NioClient getInstance(){
-        synchronized (monitor) {
-            if(client==null){
-                client = new NioClient.Builder()
-                        .setTcpPort(port)
-                        .setHost(ip)
-                        .build();
+        if(client==null) {
+            synchronized (monitor) {
+                if (client == null) {
+                    client = new NioClient.Builder()
+                            .setTcpPort(port)
+                            .setHost(ip)
+                            .build();
+                }
+                return client;
             }
-            return client;
         }
+        return client;
     }
 
     @Nullable

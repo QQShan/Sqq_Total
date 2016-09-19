@@ -42,3 +42,8 @@ webView设置padding没用，可以利用js解决
 11、今天发现
 现在做的上拉加载更多，也就是pulltorefresh是不那么完美的，
 但是结合了android.support.design.widget.CoordinatorLayout之后效果不错
+
+12未完成的功能
+分享
+换主题
+扫二维码跳转

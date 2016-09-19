@@ -125,7 +125,7 @@ public class RegisterPresenter {
         }
 
         if(!isValidPassword(password)){
-            et.setError(con.getString(R.string.log_userid_error));
+            et.setError(con.getString(R.string.log_password_error));
             focusView = et;
             cancel = true;
         }

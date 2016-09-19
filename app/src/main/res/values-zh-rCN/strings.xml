@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--应用名字-->
+    <string name="app_name">娱乐</string>
+
     <string name="s_more">更多</string>
     <string name="s_explore">发现</string>
 

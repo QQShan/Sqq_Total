@@ -2,6 +2,7 @@ package com.sqq.sqq_total.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.StringRes;
 
 /**
  * Created by sqq on 2016/6/16.
@@ -25,7 +26,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         sp.edit().putBoolean(key, value).commit();
     }
-    public static void saveBoolean(Context context, int  resId, boolean value) {
+    public static void saveBoolean(Context context, @StringRes int  resId, boolean value) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resId);
@@ -43,7 +44,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         sp.edit().putString(key, value).commit();
     }
-    public static void saveString(Context context, int resid, String value) {
+    public static void saveString(Context context,@StringRes int resid, String value) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resid);
@@ -61,7 +62,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         sp.edit().putLong(key, value).commit();
     }
-    public static void saveLong(Context context, int resId, long value) {
+    public static void saveLong(Context context,@StringRes int resId, long value) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resId);
@@ -80,7 +81,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         sp.edit().putInt(key, value).commit();
     }
-    public static void saveInt(Context context, int resId, int value) {
+    public static void saveInt(Context context,@StringRes int resId, int value) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resId);
@@ -98,7 +99,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         sp.edit().putFloat(key, value).commit();
     }
-    public static void saveFloat(Context context, int resId, float value) {
+    public static void saveFloat(Context context,@StringRes int resId, float value) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resId);
@@ -117,7 +118,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         return sp.getString(key, defValue);
     }
-    public static String getString(Context context, int resId, String defValue) {
+    public static String getString(Context context,@StringRes int resId, String defValue) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resId);
@@ -137,7 +138,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         return sp.getInt(key, defValue);
     }
-    public static int getInt(Context context, int resId, int defValue) {
+    public static int getInt(Context context,@StringRes int resId, int defValue) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resId);
@@ -156,7 +157,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         return sp.getLong(key, defValue);
     }
-    public static long getLong(Context context, int resId, long defValue) {
+    public static long getLong(Context context,@StringRes int resId, long defValue) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resId);
@@ -175,7 +176,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         return sp.getFloat(key, defValue);
     }
-    public static float getFloat(Context context, int resId, float defValue) {
+    public static float getFloat(Context context,@StringRes int resId, float defValue) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resId);
@@ -195,7 +196,7 @@ public class PreferenceUtils {
             sp = context.getSharedPreferences(SP_NAME, 0);
         return sp.getBoolean(key, defValue);
     }
-    public static boolean getBoolean(Context context, int resId, boolean defValue) {
+    public static boolean getBoolean(Context context,@StringRes int resId, boolean defValue) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resId);
@@ -214,7 +215,7 @@ public class PreferenceUtils {
         sp.edit().remove(key).commit();
     }
 
-    public static void removeItem(Context context, int resId) {
+    public static void removeItem(Context context,@StringRes int resId) {
         if (sp == null)
             sp = context.getSharedPreferences(SP_NAME, 0);
         String key = context.getString(resId);

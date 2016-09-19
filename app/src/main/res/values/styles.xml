@@ -78,7 +78,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="tablayoutText" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">@dimen/title_textSize</item>
     </style>
 
     <style name="viewStyle">

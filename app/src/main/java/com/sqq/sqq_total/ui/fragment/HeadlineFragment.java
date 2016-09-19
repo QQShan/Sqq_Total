@@ -198,10 +198,10 @@ public class HeadlineFragment extends BaseFragment implements HeadlinePresenter.
     public void getDataError(String info) {
         tv.setTextColor(getResources().getColor(R.color.red));
         tv.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        tv.setText(R.string.network_error);
+        /*tv.setText(R.string.network_error);*/
         tv.setVisibility(View.VISIBLE);
 
-        /*tv.setText(info);*/
+        tv.setText(info);
     }
 
     @Override

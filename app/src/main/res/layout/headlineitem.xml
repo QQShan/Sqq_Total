@@ -44,7 +44,7 @@
                     android:paddingBottom="1dp"
                     tools:text="图片描述"
                     android:textColor="@android:color/black"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/title_textSize" />
                 <TextView
                     android:id="@+id/hl_description"
                     android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                     android:paddingRight="5dp"
                     tools:text="图片描述呵呵呵呵呵呵呵发多少个噶地方噶"
                     android:textColor="@color/colorApGray"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/descript_textSize" />
 
             </LinearLayout>
             <TextView
@@ -67,7 +67,7 @@
                 android:layout_gravity="bottom"
                 tools:text="图片描述"
                 android:textColor="@color/colorApGray"
-                android:textSize="14sp" />
+                android:textSize="@dimen/time_textSize" />
         </FrameLayout>
 
 
